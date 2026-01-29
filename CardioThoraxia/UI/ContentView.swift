@@ -8,21 +8,14 @@
 import SwiftUI
 
 struct ContentView: View {
-    @Environment(\.modelContext) private var modelContext
+    
+    @State private var query = QueryDefinition.andGroup([])
+    private let client = PubMedClient()
 
     var body: some View {
-        VStack(spacing: 16) {
-            #if DEBUG
-            Button("Test Network Only (Mitral)") {
-                runMitralValveRepairESearch()
-            }
-
-            Button("Test SwiftData Refresh (Mitral)") {
-                refreshMitralFeed(context: modelContext)
-            }
-            #endif
+        NavigationStack {
+            QueryTermsView(query: $query, client: client)
         }
-        .padding()
     }
 }
 

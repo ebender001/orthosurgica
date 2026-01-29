@@ -8,5 +8,14 @@
 	<string>ebender001@gmail.com</string>
 	<key>PUBMED_TOOL_NAME</key>
 	<string>CardioThoraxia</string>
+	<key>UILaunchScreen</key>
+	<dict>
+		<key>UIColorName</key>
+		<string>backgroundColor</string>
+		<key>UIImageName</key>
+		<string>logo</string>
+		<key>UILaunchScreen</key>
+		<dict/>
+	</dict>
 </dict>
 </plist>

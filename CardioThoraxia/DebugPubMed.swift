@@ -40,10 +40,10 @@ func runMitralValveRepairESearch() {
                 print("Abstract: ", (first.abstractText ?? "nil").prefix(250))
             }
 
-//            print("Total:", session.totalCount)
-//            print("PMIDs:", pmids)
-//            print("WebEnv:", session.webEnv)
-//            print("QueryKey:", session.queryKey)
+            print("Total:", session.totalCount)
+            print("PMIDs:", pmids)
+            print("WebEnv:", session.webEnv)
+            print("QueryKey:", session.queryKey)
 
         } catch {
             print("ESearch failed:", error)

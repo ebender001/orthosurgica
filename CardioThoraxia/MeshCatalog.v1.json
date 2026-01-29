@@ -1,0 +1,124 @@
+{
+  "Cardiac Surgery": {
+    "Valvular Heart Disease": {
+      "Aortic Valve": [
+        { "term": "Aortic Valve", "majorTopicDefault": true },
+        { "term": "Aortic Valve Stenosis", "majorTopicDefault": true },
+        { "term": "Aortic Valve Insufficiency", "majorTopicDefault": true },
+        { "term": "Bicuspid Aortic Valve", "majorTopicDefault": false },
+        { "term": "Transcatheter Aortic Valve Replacement", "majorTopicDefault": false },
+        { "term": "Aortic Valve Prosthesis", "majorTopicDefault": false }
+      ],
+      "Mitral Valve": [
+        { "term": "Mitral Valve", "majorTopicDefault": true },
+        { "term": "Mitral Valve Insufficiency", "majorTopicDefault": true },
+        { "term": "Mitral Valve Prolapse", "majorTopicDefault": false },
+        { "term": "Mitral Valve Repair", "majorTopicDefault": true },
+        { "term": "Mitral Valve Annuloplasty", "majorTopicDefault": false }
+      ],
+      "Tricuspid Valve": [
+        { "term": "Tricuspid Valve", "majorTopicDefault": true },
+        { "term": "Tricuspid Valve Insufficiency", "majorTopicDefault": true },
+        { "term": "Tricuspid Valve Repair", "majorTopicDefault": false }
+      ]
+    },
+
+    "Coronary Artery Disease": {
+      "Revascularization": [
+        { "term": "Coronary Artery Bypass", "majorTopicDefault": true },
+        { "term": "Off-Pump Coronary Artery Bypass", "majorTopicDefault": false },
+        { "term": "Minimally Invasive Coronary Artery Bypass", "majorTopicDefault": false }
+      ],
+      "Graft Conduits": [
+        { "term": "Internal Mammary Artery", "majorTopicDefault": false },
+        { "term": "Radial Artery", "majorTopicDefault": false },
+        { "term": "Saphenous Vein", "majorTopicDefault": false }
+      ]
+    },
+
+    "Aortic Disease": {
+      "Thoracic Aorta": [
+        { "term": "Aortic Aneurysm, Thoracic", "majorTopicDefault": true },
+        { "term": "Aortic Dissection", "majorTopicDefault": true },
+        { "term": "Ascending Aortic Aneurysm", "majorTopicDefault": false }
+      ],
+      "Root Procedures": [
+        { "term": "Aortic Root", "majorTopicDefault": false },
+        { "term": "Valve-Sparing Aortic Root Replacement", "majorTopicDefault": false },
+        { "term": "Bentall Procedure", "majorTopicDefault": false }
+      ]
+    },
+
+    "Heart Failure & Mechanical Support": {
+      "Mechanical Circulatory Support": [
+        { "term": "Heart-Assist Devices", "majorTopicDefault": true },
+        { "term": "Left Ventricular Assist Devices", "majorTopicDefault": false },
+        { "term": "Extracorporeal Membrane Oxygenation", "majorTopicDefault": false }
+      ],
+      "Transplant": [
+        { "term": "Heart Transplantation", "majorTopicDefault": true }
+      ]
+    }
+  },
+
+  "Thoracic Surgery": {
+    "Lung Cancer": {
+      "Lung Neoplasms": [
+        { "term": "Lung Neoplasms", "majorTopicDefault": true },
+        { "term": "Non-Small-Cell Lung Carcinoma", "majorTopicDefault": true },
+        { "term": "Small Cell Lung Carcinoma", "majorTopicDefault": false }
+      ],
+      "Pulmonary Resection": [
+        { "term": "Lobectomy", "majorTopicDefault": false },
+        { "term": "Segmentectomy", "majorTopicDefault": false },
+        { "term": "Pneumonectomy", "majorTopicDefault": false },
+        { "term": "Sleeve Lobectomy", "majorTopicDefault": false }
+      ],
+      "Surgical Approach": [
+        { "term": "Thoracic Surgery, Video-Assisted", "majorTopicDefault": false },
+        { "term": "Robotic Surgical Procedures", "majorTopicDefault": false }
+      ]
+    },
+
+    "Esophageal Disease": {
+      "Esophageal Cancer": [
+        { "term": "Esophageal Neoplasms", "majorTopicDefault": true },
+        { "term": "Esophageal Adenocarcinoma", "majorTopicDefault": false },
+        { "term": "Esophageal Squamous Cell Carcinoma", "majorTopicDefault": false }
+      ],
+      "Procedures": [
+        { "term": "Esophagectomy", "majorTopicDefault": true },
+        { "term": "Minimally Invasive Esophagectomy", "majorTopicDefault": false },
+        { "term": "Ivor Lewis Esophagectomy", "majorTopicDefault": false }
+      ]
+    },
+
+    "Mediastinal Disease": {
+      "Anterior Mediastinum": [
+        { "term": "Mediastinal Neoplasms", "majorTopicDefault": true },
+        { "term": "Thymoma", "majorTopicDefault": false },
+        { "term": "Myasthenia Gravis", "majorTopicDefault": false }
+      ]
+    },
+
+    "Pleural & Chest Wall Disease": {
+      "Pleura": [
+        { "term": "Pleural Neoplasms", "majorTopicDefault": true },
+        { "term": "Mesothelioma", "majorTopicDefault": true },
+        { "term": "Pleural Effusion", "majorTopicDefault": false }
+      ],
+      "Chest Wall": [
+        { "term": "Chest Wall Neoplasms", "majorTopicDefault": false },
+        { "term": "Chest Wall Resection", "majorTopicDefault": false }
+      ]
+    },
+
+    "Airway Surgery": {
+      "Trachea & Bronchi": [
+        { "term": "Tracheal Neoplasms", "majorTopicDefault": false },
+        { "term": "Tracheal Stenosis", "majorTopicDefault": false },
+        { "term": "Tracheal Resection", "majorTopicDefault": false }
+      ]
+    }
+  }
+}

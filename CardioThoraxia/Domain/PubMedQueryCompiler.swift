@@ -61,10 +61,17 @@ public enum PubMedQueryCompiler {
     private static func compileRule(_ rule: QueryRule) -> String {
         switch rule {
         case .mesh(let term, let majorTopic):
-            // Major topic uses [Majr], otherwise use MeSH Terms.
-            return majorTopic
-            ? "\(quoteIfNeeded(term))[Majr]"
-            : "\(quoteIfNeeded(term))[MeSH Terms]"
+            // Some user-facing “topics” are not valid MeSH descriptors. If we only emit a MeSH tag,
+            // PubMed may return 0 results (e.g., "Aortic Root"[MeSH Terms]).
+            // To make the UX resilient, include a Title/Abstract keyword fallback.
+            //
+            // - If majorTopic is true, we still prefer [Majr] but add the fallback.
+            // - If majorTopic is false, we use [MeSH Terms] and add the fallback.
+            let meshPart = majorTopic
+                ? "\(quoteIfNeeded(term))[Majr]"
+                : "\(quoteIfNeeded(term))[MeSH Terms]"
+            let keywordFallback = "\(quoteIfNeeded(term))[tiab]"
+            return "(\(meshPart) OR \(keywordFallback))"
 
         case .keyword(let term, let field):
             return "\(quoteIfNeeded(term))[\(field.rawValue)]"

@@ -17,7 +17,7 @@ public enum QueryRule: Codable, Hashable {
 
     // Codable for enum w/ associated values
     private enum CodingKeys: String, CodingKey { case kind, term, majorTopic, field, value }
-    private enum Kind: String, Codable { case mesh, keyword, journal, author, publicationType }
+    private enum Kind: String, Codable { case mesh, keyword, journal, author, publicationType, freeText }
 
     public init(from decoder: Decoder) throws {
         let c = try decoder.container(keyedBy: CodingKeys.self)
@@ -40,6 +40,8 @@ public enum QueryRule: Codable, Hashable {
             self = .author(try c.decode(String.self, forKey: .value))
         case .publicationType:
             self = .publicationType(try c.decode(String.self, forKey: .value))
+        case .freeText:
+            self = .freeText(term: try c.decode(String.self, forKey: .term))
         }
     }
 
@@ -67,6 +69,10 @@ public enum QueryRule: Codable, Hashable {
         case .publicationType(let value):
             try c.encode(Kind.publicationType, forKey: .kind)
             try c.encode(value, forKey: .value)
+            
+        case .freeText(let term):
+            try c.encode(Kind.freeText, forKey: .kind)
+            try c.encode(term, forKey: .term)
         }
     }
 }
