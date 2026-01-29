@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PUBMED_API_KEY</key>
+	<string>50be10854875f17bb392aabbd5942defcc09</string>
+	<key>PUBMED_CONTACT_EMAIL</key>
+	<string>ebender001@gmail.com</string>
+	<key>PUBMED_TOOL_NAME</key>
+	<string>CardioThoraxia</string>
+</dict>
+</plist>

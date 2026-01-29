@@ -6,19 +6,55 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		CE53B3412F2BB49200BC7626 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CE835A562F2AC2B200DE5098 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = CE835A5D2F2AC2B200DE5098;
+			remoteInfo = CardioThoraxia;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
+		CE53B33D2F2BB49200BC7626 /* CardioThoraxiaDomainTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CardioThoraxiaDomainTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE835A5E2F2AC2B200DE5098 /* CardioThoraxia.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CardioThoraxia.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		CE53B3622F2BCE0900BC7626 /* Exceptions for "CardioThoraxia" folder in "CardioThoraxia" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Info.plist,
+			);
+			target = CE835A5D2F2AC2B200DE5098 /* CardioThoraxia */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
+		CE53B33E2F2BB49200BC7626 /* CardioThoraxiaDomainTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = CardioThoraxiaDomainTests;
+			sourceTree = "<group>";
+		};
 		CE835A602F2AC2B200DE5098 /* CardioThoraxia */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				CE53B3622F2BCE0900BC7626 /* Exceptions for "CardioThoraxia" folder in "CardioThoraxia" target */,
+			);
 			path = CardioThoraxia;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		CE53B33A2F2BB49200BC7626 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE835A5B2F2AC2B200DE5098 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -33,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				CE835A602F2AC2B200DE5098 /* CardioThoraxia */,
+				CE53B33E2F2BB49200BC7626 /* CardioThoraxiaDomainTests */,
 				CE835A5F2F2AC2B200DE5098 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -41,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				CE835A5E2F2AC2B200DE5098 /* CardioThoraxia.app */,
+				CE53B33D2F2BB49200BC7626 /* CardioThoraxiaDomainTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -48,6 +86,29 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		CE53B33C2F2BB49200BC7626 /* CardioThoraxiaDomainTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CE53B3432F2BB49200BC7626 /* Build configuration list for PBXNativeTarget "CardioThoraxiaDomainTests" */;
+			buildPhases = (
+				CE53B3392F2BB49200BC7626 /* Sources */,
+				CE53B33A2F2BB49200BC7626 /* Frameworks */,
+				CE53B33B2F2BB49200BC7626 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				CE53B3422F2BB49200BC7626 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				CE53B33E2F2BB49200BC7626 /* CardioThoraxiaDomainTests */,
+			);
+			name = CardioThoraxiaDomainTests;
+			packageProductDependencies = (
+			);
+			productName = CardioThoraxiaDomainTests;
+			productReference = CE53B33D2F2BB49200BC7626 /* CardioThoraxiaDomainTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		CE835A5D2F2AC2B200DE5098 /* CardioThoraxia */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = CE835A692F2AC2B300DE5098 /* Build configuration list for PBXNativeTarget "CardioThoraxia" */;
@@ -80,6 +141,10 @@
 				LastSwiftUpdateCheck = 2620;
 				LastUpgradeCheck = 2620;
 				TargetAttributes = {
+					CE53B33C2F2BB49200BC7626 = {
+						CreatedOnToolsVersion = 26.2;
+						TestTargetID = CE835A5D2F2AC2B200DE5098;
+					};
 					CE835A5D2F2AC2B200DE5098 = {
 						CreatedOnToolsVersion = 26.2;
 					};
@@ -100,11 +165,19 @@
 			projectRoot = "";
 			targets = (
 				CE835A5D2F2AC2B200DE5098 /* CardioThoraxia */,
+				CE53B33C2F2BB49200BC7626 /* CardioThoraxiaDomainTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		CE53B33B2F2BB49200BC7626 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE835A5C2F2AC2B200DE5098 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -115,6 +188,13 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		CE53B3392F2BB49200BC7626 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		CE835A5A2F2AC2B200DE5098 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -124,7 +204,59 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		CE53B3422F2BB49200BC7626 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = CE835A5D2F2AC2B200DE5098 /* CardioThoraxia */;
+			targetProxy = CE53B3412F2BB49200BC7626 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin XCBuildConfiguration section */
+		CE53B3442F2BB49200BC7626 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F294KH4KNP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cvoffice.CardioThoraxiaDomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CardioThoraxia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CardioThoraxia";
+			};
+			name = Debug;
+		};
+		CE53B3452F2BB49200BC7626 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = F294KH4KNP;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.cvoffice.CardioThoraxiaDomainTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				STRING_CATALOG_GENERATE_SYMBOLS = NO;
+				SWIFT_APPROACHABLE_CONCURRENCY = YES;
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
+				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CardioThoraxia.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/CardioThoraxia";
+			};
+			name = Release;
+		};
 		CE835A672F2AC2B300DE5098 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -256,6 +388,7 @@
 				DEVELOPMENT_TEAM = F294KH4KNP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CardioThoraxia/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -270,8 +403,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -288,6 +422,7 @@
 				DEVELOPMENT_TEAM = F294KH4KNP;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = CardioThoraxia/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -302,8 +437,9 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
+				SWIFT_DEFAULT_ACTOR_ISOLATION = nonisolated;
 				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_UPCOMING_FEATURE_GLOBAL_ACTOR_ISOLATED_TYPES_USABILITY = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -313,6 +449,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		CE53B3432F2BB49200BC7626 /* Build configuration list for PBXNativeTarget "CardioThoraxiaDomainTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CE53B3442F2BB49200BC7626 /* Debug */,
+				CE53B3452F2BB49200BC7626 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		CE835A592F2AC2B200DE5098 /* Build configuration list for PBXProject "CardioThoraxia" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import SwiftData
 
 @main
 struct CardioThoraxiaApp: App {
@@ -13,5 +14,6 @@ struct CardioThoraxiaApp: App {
         WindowGroup {
             ContentView()
         }
+        .modelContainer(for: [FeedRecord.self, ArticleRecord.self])
     }
 }
