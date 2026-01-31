@@ -6,10 +6,13 @@
 //
 
 import SwiftUI
+import TipKit
 
 struct QueryTermsView: View {
     @Binding var query: QueryDefinition
     let client: PubMedClient
+    private let addFirstTopicTip = AddFirstTopicTip()
+    private let addAdvancedSearchTip = AddAdvancedSearchTip()
 
     @State private var showingAddTopic = false
     @State private var showingAdvanced = false
@@ -106,6 +109,26 @@ struct QueryTermsView: View {
                     )
                 } else {
                     let group = groupBinding.wrappedValue
+                    
+                    if topicNames.count >= 2 {
+                        Picker(
+                            "Match",
+                            selection: Binding<GroupOp>(
+                                get: { groupBinding.wrappedValue.op },
+                                set: { groupBinding.wrappedValue.op = $0 }
+                            )
+                        ) {
+                            Text("All topics").tag(GroupOp.and)
+                            Text("Any topic").tag(GroupOp.or)
+                        }
+                        .pickerStyle(.segmented)
+
+                        Text(groupBinding.wrappedValue.op == .and
+                             ? "All selected topics must match."
+                             : "Any selected topic can match (broader).")
+                        .font(.footnote)
+                        .foregroundStyle(.secondary)
+                    }
 
                     ForEach(group.rules.indices, id: \.self) { index in
                         let rule = group.rules[index]
@@ -159,14 +182,24 @@ struct QueryTermsView: View {
                         systemImage: "plus.circle"
                     )
                 }
+                .popoverTip(addFirstTopicTip, arrowEdge: .top)
                 
-                Button {
-                    showingAdvanced = true
-                } label: {
-                    Label("Add Advanced Search", systemImage: "plus.circle")
+                if hasTopics {
+                    Button {
+                        showingAdvanced = true
+                    } label: {
+                        Label("Add Advanced Search", systemImage: "plus.circle")
+                    }
+                    .popoverTip(addAdvancedSearchTip, arrowEdge: .top)
+                } else {
+                    Button {
+                        showingAdvanced = true
+                    } label: {
+                        Label("Add Advanced Search", systemImage: "plus.circle")
+                    }
+                    .disabled(true)
+                    .opacity(0.5)
                 }
-                .disabled(!hasTopics)
-                .opacity(hasTopics ? 1.0 : 0.5)
                 
                 if !hasTopics {
                     Text("Add a topic first to define the focus of your search.")
@@ -199,7 +232,7 @@ struct QueryTermsView: View {
             }
         }
         .navigationTitle("CardioThoraxia")
-        .navigationSubtitle("Build Your Search")
+        .navigationSubtitleIfAvailable("Build Your Search")
 
         .navigationDestination(isPresented: $showResults) {
             SearchResultsView(query: query, client: client)
@@ -216,8 +249,20 @@ struct QueryTermsView: View {
         }
         .sheet(isPresented: $showingAdvanced) {
             NavigationStack {
-                AdvancedSearchEntryView { raw in
-                    groupBinding.wrappedValue.rules.append(.freeText(term: raw))
+                AdvancedSearchEntryView(
+                    baseQuery: PubMedQueryCompiler.compile(query)
+                ) { result in
+                    switch result.mode {
+                    case .appendClause:
+                        groupBinding.wrappedValue.rules.append(.freeText(term: result.text))
+
+                    case .editFullQuery:
+                        // Replace existing topic rules with a single free-text rule.
+                        // This gives power users full control over the PubMed term string.
+                        groupBinding.wrappedValue.rules = [.freeText(term: result.text)]
+                        groupBinding.wrappedValue.op = .and
+                    }
+
                     showingAdvanced = false
                 }
             }
@@ -238,6 +283,17 @@ struct QueryTermsView: View {
                     }
                 }
             }
+        }
+    }
+}
+
+extension View {
+    @ViewBuilder
+    func navigationSubtitleIfAvailable(_ subtitle: String) -> some View {
+        if #available(iOS 26.0, *) {
+            self.navigationSubtitle(subtitle)
+        } else {
+            self
         }
     }
 }

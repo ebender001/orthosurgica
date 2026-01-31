@@ -35,6 +35,37 @@
         { "term": "Saphenous Vein", "majorTopicDefault": false }
       ]
     },
+      
+      "Arrhythmia Surgery": {
+        "Atrial Fibrillation": [
+          { "term": "Atrial Fibrillation", "majorTopicDefault": true },
+          { "term": "Maze Procedure", "majorTopicDefault": false },
+          { "term": "Left Atrial Appendage", "majorTopicDefault": false }
+        ],
+        "Device Therapy": [
+          { "term": "Cardiac Pacing, Artificial", "majorTopicDefault": false },
+          { "term": "Defibrillators, Implantable", "majorTopicDefault": false }
+        ]
+      },
+
+      "Infective Endocarditis": {
+        "General": [
+          { "term": "Endocarditis, Bacterial", "majorTopicDefault": true },
+          { "term": "Endocarditis", "majorTopicDefault": true }
+        ],
+        "Prosthetic Valve Endocarditis": [
+          { "term": "Prosthesis-Related Infections", "majorTopicDefault": false }
+        ]
+      },
+
+      "Pericardial Disease": {
+        "Constrictive Pericarditis": [
+          { "term": "Pericarditis, Constrictive", "majorTopicDefault": true }
+        ],
+        "Pericardiectomy": [
+          { "term": "Pericardiectomy", "majorTopicDefault": true }
+        ]
+      },
 
     "Aortic Disease": {
       "Thoracic Aorta": [
@@ -60,6 +91,90 @@
       ]
     }
   },
+    
+    "Aorta & Vascular": {
+      "Thoracic Aorta": {
+        "Aneurysm & Dissection": [
+          { "term": "Aortic Aneurysm, Thoracic", "majorTopicDefault": true },
+          { "term": "Aortic Dissection", "majorTopicDefault": true }
+        ],
+        "Ascending & Arch": [
+          { "term": "Ascending Aortic Aneurysm", "majorTopicDefault": false },
+          { "term": "Aortic Arch", "majorTopicDefault": false }
+        ]
+      },
+
+      "Aortic Root": {
+        "Root Pathology": [
+          { "term": "Aortic Root", "majorTopicDefault": false },
+          { "term": "Valve-Sparing Aortic Root Replacement", "majorTopicDefault": false },
+          { "term": "Bentall Procedure", "majorTopicDefault": false }
+        ]
+      },
+
+      "Abdominal & Thoracoabdominal": {
+        "AAA & TAAA": [
+          { "term": "Aortic Aneurysm, Abdominal", "majorTopicDefault": true },
+          { "term": "Thoracoabdominal Aortic Aneurysm", "majorTopicDefault": true }
+        ]
+      },
+
+      "Peripheral & Cerebrovascular": {
+        "Carotid": [
+          { "term": "Carotid Endarterectomy", "majorTopicDefault": false },
+          { "term": "Carotid Stenosis", "majorTopicDefault": false }
+        ],
+        "Peripheral Vascular": [
+          { "term": "Peripheral Arterial Disease", "majorTopicDefault": false }
+        ]
+      }
+    },
+    
+    "Congenital": {
+      "Septal Defects": {
+        "ASD": [
+          { "term": "Heart Septal Defects, Atrial", "majorTopicDefault": true }
+        ],
+        "VSD": [
+          { "term": "Heart Septal Defects, Ventricular", "majorTopicDefault": true }
+        ],
+        "AVSD / AV Canal": [
+          { "term": "Endocardial Cushion Defects", "majorTopicDefault": true }
+        ]
+      },
+      "Conotruncal & Great Vessels": {
+        "Tetralogy of Fallot": [
+          { "term": "Tetralogy of Fallot", "majorTopicDefault": true }
+        ],
+        "Transposition": [
+          { "term": "Transposition of Great Vessels", "majorTopicDefault": true }
+        ],
+        "Truncus": [
+          { "term": "Truncus Arteriosus", "majorTopicDefault": true }
+        ]
+      },
+      "Single Ventricle Palliation": {
+        "HLHS / Norwood": [
+          { "term": "Hypoplastic Left Heart Syndrome", "majorTopicDefault": true },
+          { "term": "Norwood Procedure", "majorTopicDefault": false }
+        ],
+        "Glenn": [
+          { "term": "Glenn Procedure", "majorTopicDefault": false }
+        ],
+        "Fontan": [
+          { "term": "Fontan Procedure", "majorTopicDefault": true }
+        ]
+      },
+      "Aortic Arch & Coarctation": {
+        "Coarctation": [
+          { "term": "Aortic Coarctation", "majorTopicDefault": true }
+        ],
+        "Arch Anomalies": [
+          { "term": "Aortic Arch", "majorTopicDefault": false },
+          { "term": "Heart Defects, Congenital", "majorTopicDefault": false }
+        ]
+      }
+    },
 
   "Thoracic Surgery": {
     "Lung Cancer": {
@@ -120,5 +235,86 @@
         { "term": "Tracheal Resection", "majorTopicDefault": false }
       ]
     }
-  }
+  },
+    
+    "Transplantation": {
+      "Heart Transplantation": {
+        "Indications & Outcomes": [
+          { "term": "Heart Transplantation", "majorTopicDefault": true },
+          { "term": "Heart Failure", "majorTopicDefault": false }
+        ],
+        "Rejection & Immunology": [
+          { "term": "Heart Transplant Rejection", "majorTopicDefault": true },
+          { "term": "Immunosuppression", "majorTopicDefault": false }
+        ]
+      },
+
+      "Lung Transplantation": {
+        "General": [
+          { "term": "Lung Transplantation", "majorTopicDefault": true }
+        ],
+        "Indications": [
+          { "term": "Pulmonary Fibrosis", "majorTopicDefault": false },
+          { "term": "Chronic Obstructive Pulmonary Disease", "majorTopicDefault": false },
+          { "term": "Cystic Fibrosis", "majorTopicDefault": false }
+        ],
+        "EVLP & Donor Management": [
+          { "term": "Ex Vivo Lung Perfusion", "majorTopicDefault": false },
+          { "term": "Organ Preservation", "majorTopicDefault": false }
+        ]
+      },
+
+      "Heart–Lung Transplantation": {
+        "Combined Transplant": [
+          { "term": "Heart-Lung Transplantation", "majorTopicDefault": true }
+        ]
+      }
+    },
+    
+    "Techniques & Approaches": {
+      "Minimally Invasive": {
+        "Cardiac": [
+          { "term": "Minimally Invasive Surgical Procedures", "majorTopicDefault": false },
+          { "term": "Minimally Invasive Cardiac Surgery", "majorTopicDefault": false }
+        ],
+        "Thoracic": [
+          { "term": "Thoracic Surgery, Video-Assisted", "majorTopicDefault": false }
+        ]
+      },
+
+        "Robotic Surgery": {
+            "Cardiac": [
+              { "term": "Robotic CABG", "majorTopicDefault": false },
+              { "term": "Robotic Valve Surgery", "majorTopicDefault": false }
+            ],
+            "Thoracic": [
+              { "term": "Robotic Lobectomy", "majorTopicDefault": false },
+              { "term": "Robotic Segmentectomy", "majorTopicDefault": false },
+              { "term": "Robotic Wedge Resection", "majorTopicDefault": false }
+            ]
+          },
+
+      "Open Surgery": {
+        "Sternotomy & Thoracotomy": [
+          { "term": "Sternotomy", "majorTopicDefault": false },
+          { "term": "Thoracotomy", "majorTopicDefault": false }
+        ]
+      },
+
+      "Redo / Reoperative Surgery": {
+        "Cardiac Reoperation": [
+          { "term": "Reoperation", "majorTopicDefault": false },
+          { "term": "Redo Cardiac Surgery", "majorTopicDefault": false }
+        ]
+      },
+
+      "Adjuncts & Support": {
+        "Cardiopulmonary Bypass": [
+          { "term": "Cardiopulmonary Bypass", "majorTopicDefault": false }
+        ],
+        "Circulatory Arrest": [
+          { "term": "Hypothermic Circulatory Arrest", "majorTopicDefault": false }
+        ]
+      }
+    }
 }
