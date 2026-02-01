@@ -16,8 +16,13 @@ struct QueryTermsView: View {
 
     @State private var showingAddTopic = false
     @State private var showingAdvanced = false
-
     @State private var showResults = false
+    
+    @State private var showingClearAllConfirm = false
+    private var queryIsEmpty: Bool {
+        // No rules at all -> nothing to clear
+        query.groups.allSatisfy { $0.rules.isEmpty }
+    }
     
     private struct EditingTopic: Identifiable {
         let id = UUID()
@@ -233,6 +238,31 @@ struct QueryTermsView: View {
         }
         .navigationTitle("CardioThoraxia")
         .navigationSubtitleIfAvailable("Build Your Search")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                if !queryIsEmpty {
+                    Button("Clear All") {
+                        showingClearAllConfirm = true
+                    }
+                    .transition(.opacity)
+                }
+            }
+        }
+        .animation(.easeInOut(duration: 0.2), value: queryIsEmpty)
+        .alert("Clear all search criteria?", isPresented: $showingClearAllConfirm) {
+            Button("Cancel", role: .cancel) { }
+            Button("Clear All", role: .destructive) {
+                // Reset to an empty topics group (your Binding will keep this consistent)
+                query.groups = [QueryGroup(op: .and, rules: [])]
+                // Close any in-progress flows
+                showResults = false
+                showingAddTopic = false
+                showingAdvanced = false
+                editingTopic = nil
+            }
+        } message: {
+            Text("This will remove all selected topics and any additional criteria.")
+        }
 
         .navigationDestination(isPresented: $showResults) {
             SearchResultsView(query: query, client: client)

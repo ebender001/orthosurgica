@@ -12,6 +12,22 @@ public struct QueryDefinition: Codable, Hashable {
     public var groups: [QueryGroup]
     public var filters: QueryFilters
 
+    /// True when there are no rules in any group AND filters are at their default values.
+    public var isEmpty: Bool {
+        groups.allSatisfy { $0.rules.isEmpty } && filters.isDefault
+    }
+
+    /// Removes all rules (keeps filter defaults).
+    public mutating func clearAll() {
+        groups.removeAll()
+        filters = .init()
+    }
+
+    /// Convenience empty query.
+    public static var empty: QueryDefinition {
+        QueryDefinition(groups: [], filters: .init())
+    }
+
     public init(groups: [QueryGroup], filters: QueryFilters = .init()) {
         self.groups = groups
         self.filters = filters
@@ -40,6 +56,15 @@ public enum GroupOp: String, Codable, CaseIterable, Hashable {
 }
 
 public struct QueryFilters: Codable, Hashable {
+    /// Used to determine whether any filters are actively narrowing the query.
+    public var isDefault: Bool {
+        date == nil
+        && humansOnly == true
+        && englishOnly == true
+        && hasAbstractOnly == false
+        && publicationTypes.isEmpty
+    }
+
     public var date: DateFilter?
     public var humansOnly: Bool
     public var englishOnly: Bool
