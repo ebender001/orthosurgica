@@ -7,20 +7,18 @@
 
 import SwiftUI
 
-/// Topic browser backed by `MeshCatalog.v1.json`.
+/// Topic browser backed by the remotely updateable MeshCatalog.
 ///
-/// User-facing language avoids “MeSH” while still returning canonical MeSH headings.
+/// User-facing language avoids “MeSH” while still returning canonical PubMed/MeSH headings.
 struct MeshCatalogPickerView: View {
     /// Callback when the user taps a topic.
     /// - Parameters:
     ///   - term: The canonical PubMed/MeSH heading string.
     ///   - isPrimary: Whether this topic should be treated as “Primary” (maps to MeSH Major Topic).
-    ///
     let selectedTopics: Set<String>
     let onSelect: (String, Bool) -> Void
 
-    @State private var catalog: MeshCatalog = [:]
-    @State private var loadError: String?
+    @EnvironmentObject private var meshManager: MeshCatalogManager
 
     @State private var majorHeading: String = ""
     @State private var subspecialty: String = ""
@@ -30,17 +28,21 @@ struct MeshCatalogPickerView: View {
     @State private var overrideEmphasisDefault = false
     @State private var isPrimaryTopic = true
 
+    private var catalog: MeshCatalog {
+        meshManager.catalog ?? [:]
+    }
+
     var body: some View {
         Form {
             Section("Browse Topics") {
-                if let loadError {
+                if let loadError = meshManager.error {
                     ContentUnavailableView(
                         "Couldn’t load topics",
                         systemImage: "exclamationmark.triangle",
                         description: Text(loadError)
                     )
                 } else if catalog.isEmpty {
-                    ProgressView("Loading…")
+                    ProgressView(meshManager.status.isEmpty ? "Loading…" : meshManager.status)
                 } else {
                     Picker("Major heading", selection: $majorHeading) {
                         ForEach(catalog.majorHeadingsSorted, id: \.self) { Text($0) }
@@ -56,7 +58,7 @@ struct MeshCatalogPickerView: View {
                 }
             }
 
-            if !catalog.isEmpty, loadError == nil {
+            if !catalog.isEmpty, meshManager.error == nil {
                 let terms = catalog.terms(for: majorHeading, subspecialty: subspecialty, topicGroup: topicGroup)
 
                 Section("Available Topics") {
@@ -76,7 +78,7 @@ struct MeshCatalogPickerView: View {
 
                             Toggle("Primary Topic", isOn: $isPrimaryTopic)
                         }
-                        
+
                         ForEach(terms, id: \.term) { t in
                             let isAlreadyAdded = selectedTopics.contains(t.term)
                             Button {
@@ -87,7 +89,7 @@ struct MeshCatalogPickerView: View {
                                     VStack(alignment: .leading, spacing: 1) {
                                         Text(t.term)
                                             .font(.body)
-                                        
+
                                         let effectivePrimary = overrideEmphasisDefault ? isPrimaryTopic : t.majorTopicDefault
 
                                         Text(overrideEmphasisDefault
@@ -120,35 +122,41 @@ struct MeshCatalogPickerView: View {
             }
         }
         .navigationTitle("Add Topic")
+        .onChange(of: meshManager.catalog) { _, newValue in
+            guard let loaded = newValue, !loaded.isEmpty else { return }
+            initializeSelectionsIfNeeded(using: loaded)
+        }
         .onAppear {
-            loadCatalogIfNeeded()
+            if let loaded = meshManager.catalog, !loaded.isEmpty {
+                initializeSelectionsIfNeeded(using: loaded)
+            }
         }
         .onChange(of: majorHeading) { _, _ in
+            guard !catalog.isEmpty else { return }
             // Reset dependent selections when parent changes
             subspecialty = catalog.subspecialtiesSorted(for: majorHeading).first ?? ""
             topicGroup = catalog.topicGroupsSorted(for: majorHeading, subspecialty: subspecialty).first ?? ""
         }
         .onChange(of: subspecialty) { _, _ in
+            guard !catalog.isEmpty else { return }
             topicGroup = catalog.topicGroupsSorted(for: majorHeading, subspecialty: subspecialty).first ?? ""
         }
     }
 
-    private func loadCatalogIfNeeded() {
-        guard catalog.isEmpty, loadError == nil else { return }
-
-        do {
-            let loaded = try MeshCatalogLoader.load()
-            catalog = loaded
-
-            // Initialize selections to first available path
+    private func initializeSelectionsIfNeeded(using loaded: MeshCatalog) {
+        if majorHeading.isEmpty || loaded[majorHeading] == nil {
             majorHeading = loaded.majorHeadingsSorted.first ?? ""
-            subspecialty = loaded.subspecialtiesSorted(for: majorHeading).first ?? ""
-            topicGroup = loaded.topicGroupsSorted(for: majorHeading, subspecialty: subspecialty).first ?? ""
-
-            // Sensible default for override toggle
-            isPrimaryTopic = true
-        } catch {
-            loadError = error.localizedDescription
         }
+
+        if subspecialty.isEmpty || loaded[majorHeading]?[subspecialty] == nil {
+            subspecialty = loaded.subspecialtiesSorted(for: majorHeading).first ?? ""
+        }
+
+        if topicGroup.isEmpty || loaded[majorHeading]?[subspecialty]?[topicGroup] == nil {
+            topicGroup = loaded.topicGroupsSorted(for: majorHeading, subspecialty: subspecialty).first ?? ""
+        }
+
+        // Sensible default for override toggle
+        isPrimaryTopic = true
     }
 }

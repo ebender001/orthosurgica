@@ -12,6 +12,7 @@ import ParseSwift
 
 @main
 struct CardioThoraxiaApp: App {
+    @StateObject private var meshManager = MeshCatalogManager()
     
     init() {
         try? Tips.configure()
@@ -19,7 +20,7 @@ struct CardioThoraxiaApp: App {
         func plist(_ key: String) -> String {
             guard let value = Bundle.main.object(forInfoDictionaryKey: key) as? String,
                   !value.isEmpty,
-                  !value.hasSuffix("$(") else {
+                  !value.hasPrefix("$(") else {
                 fatalError("Missing info.plist value for \(key). Check Secrets.xcconfig + Info.plist mapping")
             }
             return value
@@ -28,6 +29,8 @@ struct CardioThoraxiaApp: App {
         let appId = plist("PARSE_APP_ID")
         let clientKey = plist("PARSE_CLIENT_KEY")
         let serverURL = URL(string: plist("PARSE_SERVER_URL"))!
+        
+        print("PARSE_SERVER_URL =", plist("PARSE_SERVER_URL"))
         
         ParseSwift.initialize(
             applicationId: appId,
@@ -39,6 +42,10 @@ struct CardioThoraxiaApp: App {
     var body: some Scene {
         WindowGroup {
             ContentView()
+                .environmentObject(meshManager)
+                .task {
+                    await meshManager.loadRemote()
+                }
         }
         .modelContainer(for: [FeedRecord.self, ArticleRecord.self])
     }
