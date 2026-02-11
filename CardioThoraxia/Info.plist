@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>PARSE_APP_ID</key>
+	<string>$(PARSE_APP_ID)</string>
+	<key>PARSE_CLIENT_KEY</key>
+	<string>$(PARSE_CLIENT_KEY)</string>
+	<key>PARSE_SERVER_URL</key>
+	<string>$(PARSE_SERVER_URL)</string>
 	<key>PUBMED_API_KEY</key>
 	<string>50be10854875f17bb392aabbd5942defcc09</string>
 	<key>PUBMED_CONTACT_EMAIL</key>
