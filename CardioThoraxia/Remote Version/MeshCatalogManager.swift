@@ -13,9 +13,27 @@ final class MeshCatalogManager: ObservableObject {
     @Published var status: String = "Idle"
     @Published var error: String?
 
+    private var cancellables = Set<AnyCancellable>()
     private let service = MeshCatalogService()
+    
+    init() {
+        NotificationCenter.default.publisher(for: .meshCatalogUpdated)
+            .sink { [weak self] note in
+                guard let self else { return }
+
+                #if DEBUG
+                let v = note.userInfo?["version"] as? String
+                print("Received meshCatalogUpdated notification. version=\(v ?? "nil")")
+                #endif
+
+                Task { await self.loadRemote() }
+            }
+            .store(in: &cancellables)
+    }
+
 
     private enum Cache {
+        
         private static let cachedFileName = "mesh_catalog.json"
         private static let cachedVersionKey = "mesh_catalog_cached_version"
 
@@ -74,12 +92,17 @@ final class MeshCatalogManager: ObservableObject {
         do {
             let (version, data) = try await service.fetchActiveCatalog()
 
+            #if DEBUG
             print("Downloaded catalog version:", version ?? "nil")
             print("Downloaded bytes:", data.count)
+            #endif
 
             // Preview helps catch HTML / error payloads / wrong JSON structure
             let preview = String(data: data, encoding: .utf8)
-                .map { String($0.prefix(600)) } ?? "<non-utf8 data>"
+                .map { String($0.prefix(5000)) } ?? "<non-utf8 data>"
+            #if DEBUG
+            print("Preview:", preview)
+            #endif
 
             // If remote version matches cached version AND we already have a catalog loaded,
             // we can skip decoding/writing.

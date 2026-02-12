@@ -12,7 +12,9 @@ import ParseSwift
 
 @main
 struct CardioThoraxiaApp: App {
+    @Environment(\.scenePhase) private var scenePhase
     @StateObject private var meshManager = MeshCatalogManager()
+    @UIApplicationDelegateAdaptor(PushNotificationsDelegate.self) private var pushDelegate
     
     init() {
         try? Tips.configure()
@@ -30,7 +32,9 @@ struct CardioThoraxiaApp: App {
         let clientKey = plist("PARSE_CLIENT_KEY")
         let serverURL = URL(string: plist("PARSE_SERVER_URL"))!
         
+        #if DEBUG
         print("PARSE_SERVER_URL =", plist("PARSE_SERVER_URL"))
+        #endif
         
         ParseSwift.initialize(
             applicationId: appId,
@@ -43,8 +47,11 @@ struct CardioThoraxiaApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(meshManager)
-                .task {
-                    await meshManager.loadRemote()
+                .task { await meshManager.loadRemote() }
+                .onChange(of: scenePhase) { _, phase in
+                    if phase == .active {
+                        Task { await meshManager.loadRemote() }
+                    }
                 }
         }
         .modelContainer(for: [FeedRecord.self, ArticleRecord.self])
@@ -80,5 +87,19 @@ struct AddAdvancedSearchTip: Tip {
 
     var image: Image? {
         Image(systemName: "slider.horizontal.3")
+    }
+}
+
+struct SuggestTopicTip: Tip {
+    var title: Text {
+        Text("Suggest a new topic")
+    }
+
+    var message: Text? {
+        Text("Can’t find what you’re looking for? Tap the lightbulb to suggest a new term or topic group for the catalog.")
+    }
+
+    var image: Image? {
+        Image(systemName: "lightbulb")
     }
 }

@@ -14,6 +14,12 @@
 	<string>ebender001@gmail.com</string>
 	<key>PUBMED_TOOL_NAME</key>
 	<string>CardioThoraxia</string>
+    <key>NSUserNotificationUsageDescription</key>
+    <string>CardioThoraxia uses notifications to alert you when the MeshCatalog has been updated.</string>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>remote-notification</string>
+	</array>
 	<key>UILaunchScreen</key>
 	<dict>
 		<key>UIColorName</key>

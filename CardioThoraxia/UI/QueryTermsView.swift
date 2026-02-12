@@ -19,6 +19,7 @@ struct QueryTermsView: View {
     @State private var showResults = false
     
     @State private var showingClearAllConfirm = false
+    @AppStorage("didShowNotificationPrePrompt") private var didShowNotificationPrePrompt = false
     private var queryIsEmpty: Bool {
         // No rules at all -> nothing to clear
         query.groups.allSatisfy { $0.rules.isEmpty }
@@ -187,7 +188,7 @@ struct QueryTermsView: View {
                         systemImage: "plus.circle"
                     )
                 }
-                .popoverTip(addFirstTopicTip, arrowEdge: .top)
+                .popoverTip(didShowNotificationPrePrompt ? addFirstTopicTip : nil, arrowEdge: .top)
                 
                 if hasTopics {
                     Button {
@@ -195,7 +196,7 @@ struct QueryTermsView: View {
                     } label: {
                         Label("Add Advanced Search", systemImage: "plus.circle")
                     }
-                    .popoverTip(addAdvancedSearchTip, arrowEdge: .top)
+                    .popoverTip(didShowNotificationPrePrompt ? addAdvancedSearchTip : nil, arrowEdge: .top)
                 } else {
                     Button {
                         showingAdvanced = true

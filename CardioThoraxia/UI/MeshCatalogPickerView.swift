@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import TipKit
 
 /// Topic browser backed by the remotely updateable MeshCatalog.
 ///
@@ -19,6 +20,8 @@ struct MeshCatalogPickerView: View {
     let onSelect: (String, Bool) -> Void
 
     @EnvironmentObject private var meshManager: MeshCatalogManager
+    
+    private let suggestTopicTip = SuggestTopicTip()
 
     @State private var majorHeading: String = ""
     @State private var subspecialty: String = ""
@@ -28,12 +31,25 @@ struct MeshCatalogPickerView: View {
     @State private var overrideEmphasisDefault = false
     @State private var isPrimaryTopic = true
 
+    // Suggest topic UI
+    @State private var showingSuggestSheet = false
+    @State private var showingSuggestThanks = false
+
     private var catalog: MeshCatalog {
         meshManager.catalog ?? [:]
     }
 
+    private var categoryPath: String {
+        // This is the context we store with the suggestion
+        // e.g., "Thoracic Surgery > Esophageal Disease > Benign Disease"
+        [majorHeading, subspecialty, topicGroup]
+            .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
+            .joined(separator: " > ")
+    }
+
     var body: some View {
         Form {
+            TipView(suggestTopicTip)
             Section("Browse Topics") {
                 if let loadError = meshManager.error {
                     ContentUnavailableView(
@@ -122,6 +138,30 @@ struct MeshCatalogPickerView: View {
             }
         }
         .navigationTitle("Add Topic")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button {
+                    showingSuggestSheet = true
+                } label: {
+                    Label("Suggest", systemImage: "lightbulb")
+                }
+                .disabled(catalog.isEmpty || meshManager.error != nil)
+            }
+        }
+        .sheet(isPresented: $showingSuggestSheet) {
+            // Requires SuggestTopicView.swift to exist with this signature:
+            // SuggestTopicView(categoryPath: String, onSubmitted: (() -> Void)?)
+            SuggestTopicView(categoryPath: categoryPath) {
+                // Called only on successful submit
+                showingSuggestSheet = false
+                showingSuggestThanks = true
+            }
+        }
+        .alert("Thanks!", isPresented: $showingSuggestThanks) {
+            Button("OK", role: .cancel) { }
+        } message: {
+            Text("Your topic suggestion was submitted for review.")
+        }
         .onChange(of: meshManager.catalog) { _, newValue in
             guard let loaded = newValue, !loaded.isEmpty else { return }
             initializeSelectionsIfNeeded(using: loaded)
