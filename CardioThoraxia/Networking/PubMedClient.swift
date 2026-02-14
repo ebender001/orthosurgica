@@ -250,6 +250,7 @@ private final class PubMedArticleXMLParser: NSObject, XMLParserDelegate {
     private var currentAbstractParts: [String] = []
     private var currentJournal: String?
     private var currentYear: Int?
+    private var currentMonth: String?
     private var currentAuthors: [String] = []
     private var currentDOI: String?
     private var currentPMCID: String?
@@ -356,12 +357,39 @@ private final class PubMedArticleXMLParser: NSObject, XMLParserDelegate {
                     currentYear = yearInt
                 }
             }
+        case "Month":
+            if insidePubDate, currentMonth == nil {
+                let normalized = normalizeMonth(trimmedText)
+                if !normalized.isEmpty {
+                    currentMonth = normalized
+                }
+            }
         case "MedlineDate":
-            if insideMedlineDate && currentYear == nil {
+            if insideMedlineDate {
                 // try to parse first 4 digits as year
-                let prefix = trimmedText.prefix(4)
-                if let yearInt = Int(prefix) {
-                    currentYear = yearInt
+                if currentYear == nil {
+                    let prefix = trimmedText.prefix(4)
+                    if let yearInt = Int(prefix) {
+                        currentYear = yearInt
+                    }
+                }
+
+                // try to parse a month token if we don't already have one
+                if currentMonth == nil {
+                    // examples: "2026 Jan-Feb", "2026 Feb 12", "2026 Spring"
+                    let afterYear = trimmedText.count > 4 ? String(trimmedText.dropFirst(4)) : ""
+                    let cleaned = afterYear.trimmingCharacters(in: .whitespacesAndNewlines)
+                    if !cleaned.isEmpty {
+                        // take the first token, stripping common range separators
+                        let token = cleaned
+                            .split(whereSeparator: { $0 == " " || $0 == "-" || $0 == "/" })
+                            .first
+                            .map(String.init) ?? ""
+                        let normalized = normalizeMonth(token)
+                        if !normalized.isEmpty {
+                            currentMonth = normalized
+                        }
+                    }
                 }
             }
             insideMedlineDate = false
@@ -435,6 +463,7 @@ private final class PubMedArticleXMLParser: NSObject, XMLParserDelegate {
                     abstractText: abstractJoined,
                     journal: currentJournal,
                     year: currentYear,
+                    month: currentMonth,
                     authors: currentAuthors,
                     doi: currentDOI,
                     pmcID: currentPMCID,
@@ -468,6 +497,7 @@ private final class PubMedArticleXMLParser: NSObject, XMLParserDelegate {
         currentAbstractParts = []
         currentJournal = nil
         currentYear = nil
+        currentMonth = nil
         currentAuthors = []
         currentDOI = nil
         currentPMCID = nil
@@ -483,5 +513,44 @@ private final class PubMedArticleXMLParser: NSObject, XMLParserDelegate {
         currentAuthorInitials = nil
         insidePubDate = false
         insideMedlineDate = false
+    }
+
+    private func normalizeMonth(_ raw: String) -> String {
+        let t = raw.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !t.isEmpty else { return "" }
+
+        // If PubMed provides a range like "May-Jun", keep the first month.
+        let firstPart = t.split(whereSeparator: { $0 == "-" || $0 == "/" }).first.map(String.init) ?? t
+        let s = firstPart.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !s.isEmpty else { return "" }
+
+        // Numeric months (e.g., "03")
+        if let n = Int(s), (1...12).contains(n) {
+            return ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"][n - 1]
+        }
+
+        // Text months: accept common abbreviations/full names, return 3-letter form.
+        let lower = s.lowercased()
+        let map: [(String, String)] = [
+            ("january","Jan"), ("jan","Jan"),
+            ("february","Feb"), ("feb","Feb"),
+            ("march","Mar"), ("mar","Mar"),
+            ("april","Apr"), ("apr","Apr"),
+            ("may","May"),
+            ("june","Jun"), ("jun","Jun"),
+            ("july","Jul"), ("jul","Jul"),
+            ("august","Aug"), ("aug","Aug"),
+            ("september","Sep"), ("sep","Sep"), ("sept","Sep"),
+            ("october","Oct"), ("oct","Oct"),
+            ("november","Nov"), ("nov","Nov"),
+            ("december","Dec"), ("dec","Dec")
+        ]
+
+        for (key, val) in map where lower.hasPrefix(key) {
+            return val
+        }
+
+        // Seasonal/other tokens (e.g., "Spring") — return as-is to avoid losing info
+        return s
     }
 }

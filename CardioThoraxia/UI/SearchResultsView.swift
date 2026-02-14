@@ -13,6 +13,12 @@ struct SearchResultsView: View {
 
     @StateObject private var vm: SearchResultsViewModel
     @State private var didAutoRun = false
+    @State private var selectedKinds: Set<ArticleKind> = []
+    
+    var filteredArticles: [Article] {
+        guard !selectedKinds.isEmpty else { return vm.articles }
+        return vm.articles.filter { selectedKinds.contains($0.kind) }
+    }
 
     init(query: QueryDefinition, client: PubMedClient) {
         self.query = query
@@ -42,7 +48,7 @@ struct SearchResultsView: View {
                     )
                 } else {
                     List {
-                        ForEach(vm.articles, id: \.id) { article in
+                        ForEach(filteredArticles, id: \.id) { article in
                             NavigationLink {
                                 ArticleDetailView(article: article)
                             } label: {
@@ -76,5 +82,32 @@ struct SearchResultsView: View {
             await vm.refresh(query: query, retMax: 20)
         }
         .navigationTitle("Results")
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Menu {
+                    Button("Clear Filter") { selectedKinds.removeAll() }
+
+                    Divider()
+
+                    ForEach(ArticleKind.allCases, id: \.self) { kind in
+                        Button {
+                            if selectedKinds.contains(kind) {
+                                selectedKinds.remove(kind)
+                            } else {
+                                selectedKinds.insert(kind)
+                            }
+                        } label: {
+                            Label(
+                                kind.displayName,
+                                systemImage: selectedKinds.contains(kind) ? "checkmark.circle.fill" : "circle"
+                            )
+                        }
+                    }
+                } label: {
+                    Image(systemName: selectedKinds.isEmpty ? "line.3.horizontal.decrease.circle" : "line.3.horizontal.decrease.circle.fill")
+                }
+                .accessibilityLabel("Filter publication type")
+            }
+        }
     }
 }

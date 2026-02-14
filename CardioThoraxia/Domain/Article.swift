@@ -13,6 +13,7 @@ public struct Article: Identifiable, Codable, Hashable {
     public var abstractText: String?
     public var journal: String?
     public var year: Int?
+    public var month: String?
     public var authors: [String]
     public var doi: String?
     public var pmcID: String?
@@ -26,6 +27,7 @@ public struct Article: Identifiable, Codable, Hashable {
         abstractText: String? = nil,
         journal: String? = nil,
         year: Int? = nil,
+        month: String? = nil,
         authors: [String] = [],
         doi: String? = nil,
         pmcID: String? = nil,
@@ -38,6 +40,7 @@ public struct Article: Identifiable, Codable, Hashable {
         self.abstractText = abstractText
         self.journal = journal
         self.year = year
+        self.month = month
         self.authors = authors
         self.doi = doi
         self.pmcID = pmcID

@@ -19,6 +19,7 @@ final class ArticleRecord {
     var abstractText: String?
     var journal: String?
     var year: Int?
+    var month: String?
 
     var authors: [String]
     var doi: String?
@@ -39,6 +40,7 @@ final class ArticleRecord {
         abstractText: String? = nil,
         journal: String? = nil,
         year: Int? = nil,
+        month: String? = nil,
         authors: [String] = [],
         doi: String? = nil,
         pmcID: String? = nil,
@@ -54,6 +56,7 @@ final class ArticleRecord {
         self.abstractText = abstractText
         self.journal = journal
         self.year = year
+        self.month = month
         self.authors = authors
         self.doi = doi
         self.pmcID = pmcID

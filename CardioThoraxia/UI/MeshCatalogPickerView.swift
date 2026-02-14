@@ -20,6 +20,7 @@ struct MeshCatalogPickerView: View {
     let onSelect: (String, Bool) -> Void
 
     @EnvironmentObject private var meshManager: MeshCatalogManager
+    @Environment(\.colorScheme) private var colorScheme
     
     private let suggestTopicTip = SuggestTopicTip()
 
@@ -45,6 +46,34 @@ struct MeshCatalogPickerView: View {
         [majorHeading, subspecialty, topicGroup]
             .filter { !$0.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty }
             .joined(separator: " > ")
+    }
+
+    private var badgeTintOpacity: Double { colorScheme == .dark ? 0.28 : 0.14 }
+    private var badgeStrokeOpacity: Double { colorScheme == .dark ? 0.32 : 0.25 }
+
+    @ViewBuilder
+    private func paletteCircle(tint: Color, size: CGFloat) -> some View {
+        Circle()
+            .fill(.ultraThinMaterial)
+            .overlay(
+                Circle().fill(tint.opacity(badgeTintOpacity))
+            )
+            .overlay(
+                Circle().strokeBorder(tint.opacity(badgeStrokeOpacity), lineWidth: 1)
+            )
+            .frame(width: size, height: size)
+            .accessibilityHidden(true)
+    }
+
+    @ViewBuilder
+    private func paletteIcon(_ symbol: String, tint: Color, size: CGFloat = 22, symbolSize: CGFloat = 12) -> some View {
+        ZStack {
+            paletteCircle(tint: tint, size: size)
+            Image(systemName: symbol)
+                .font(.system(size: symbolSize, weight: .semibold))
+                .foregroundStyle(tint)
+        }
+        .accessibilityHidden(true)
     }
 
     var body: some View {
@@ -123,10 +152,15 @@ struct MeshCatalogPickerView: View {
 
                                     Spacer()
 
-                                    Image(systemName: isAlreadyAdded ? "checkmark.circle.fill" : "plus.circle")
-                                        .foregroundStyle(isAlreadyAdded ? .secondary : .primary)
+                                    if isAlreadyAdded {
+                                        paletteIcon("checkmark", tint: .secondary, size: 24, symbolSize: 12)
+                                            .opacity(0.9)
+                                    } else {
+                                        paletteIcon("plus", tint: .indigo, size: 24, symbolSize: 12)
+                                    }
                                 }
                                 .padding(.vertical, 6)
+                                .padding(.horizontal, 2)
                                 .contentShape(Rectangle())
                             }
                             .buttonStyle(.plain)
@@ -137,13 +171,14 @@ struct MeshCatalogPickerView: View {
                 }
             }
         }
+        .tint(.indigo)
         .navigationTitle("Add Topic")
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
                 Button {
                     showingSuggestSheet = true
                 } label: {
-                    Label("Suggest", systemImage: "lightbulb")
+                    paletteIcon("lightbulb", tint: .orange, size: 30, symbolSize: 14)
                 }
                 .disabled(catalog.isEmpty || meshManager.error != nil)
             }

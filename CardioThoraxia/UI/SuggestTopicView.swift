@@ -89,6 +89,7 @@ struct SuggestTopicView: View {
         }
     }
 
+    @MainActor
     private func submit() async {
         isSubmitting = true
         error = nil
@@ -97,13 +98,8 @@ struct SuggestTopicView: View {
         let term = suggestedTerm.trimmingCharacters(in: .whitespacesAndNewlines)
 
         let appVersion = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? ""
-        let buildNumber = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? ""
 
-        // If you want installationId, easiest is to store it once when you create/save Installation for push.
-        // For now, leave nil unless you already have it persisted.
-        let installationId: String? = nil
-
-        var s = TopicSuggestion(
+        let s = TopicSuggestion(
             suggestedTerm: term,
             suggestionType: suggestionType,
             categoryPath: categoryPath,

@@ -17,8 +17,10 @@ struct QueryTermsView: View {
     @State private var showingAddTopic = false
     @State private var showingAdvanced = false
     @State private var showResults = false
+    @State private var runSearchPulse = false
     
     @State private var showingClearAllConfirm = false
+    @Environment(\.colorScheme) private var colorScheme
     @AppStorage("didShowNotificationPrePrompt") private var didShowNotificationPrePrompt = false
     private var queryIsEmpty: Bool {
         // No rules at all -> nothing to clear
@@ -101,18 +103,47 @@ struct QueryTermsView: View {
             }
     }
 
+    private var badgeTintOpacity: Double { colorScheme == .dark ? 0.28 : 0.14 }
+    private var badgeStrokeOpacity: Double { colorScheme == .dark ? 0.32 : 0.25 }
+
+    @ViewBuilder
+    private func paletteIcon(_ symbol: String, tint: Color) -> some View {
+        ZStack {
+            Circle()
+                .fill(.ultraThinMaterial)
+                .overlay(
+                    Circle().fill(tint.opacity(badgeTintOpacity))
+                )
+                .overlay(
+                    Circle().strokeBorder(tint.opacity(badgeStrokeOpacity), lineWidth: 1)
+                )
+                .frame(width: 28, height: 28)
+
+            Image(systemName: symbol)
+                .font(.system(size: 12, weight: .semibold))
+                .foregroundStyle(tint)
+        }
+        .accessibilityHidden(true)
+    }
+
     var body: some View {
         Form {
             Section("Selected Topics & Criteria") {
                 if groupBinding.wrappedValue.rules.isEmpty {
-                    ContentUnavailableView(
-                        "Start by adding a topic",
-                        systemImage: "list.bullet.rectangle",
-                        description: Text(
+                    ContentUnavailableView {
+                        VStack(spacing: 12) {
+                            paletteIcon("list.bullet.rectangle", tint: .indigo)
+                                .frame(width: 60, height: 60)
+
+                            Text("Start by adding a topic")
+                                .font(.headline)
+                        }
+                    } description: {
+                        Text(
                             "Choose one or more topics to define the focus of your search. " +
                             "You can refine it later with advanced criteria."
                         )
-                    )
+                    }
                 } else {
                     let group = groupBinding.wrappedValue
                     
@@ -183,10 +214,10 @@ struct QueryTermsView: View {
                 Button {
                     showingAddTopic = true
                 } label: {
-                    Label(
-                        hasTopics ? "Add Another Topic" : "Add First Topic",
-                        systemImage: "plus.circle"
-                    )
+                    HStack(spacing: 10) {
+                        paletteIcon("plus", tint: .blue)
+                        Text(hasTopics ? "Add Another Topic" : "Add First Topic")
+                    }
                 }
                 .popoverTip(didShowNotificationPrePrompt ? addFirstTopicTip : nil, arrowEdge: .top)
                 
@@ -194,14 +225,20 @@ struct QueryTermsView: View {
                     Button {
                         showingAdvanced = true
                     } label: {
-                        Label("Add Advanced Search", systemImage: "plus.circle")
+                        HStack(spacing: 10) {
+                            paletteIcon("slider.horizontal.3", tint: .teal)
+                            Text("Add Advanced Search")
+                        }
                     }
                     .popoverTip(didShowNotificationPrePrompt ? addAdvancedSearchTip : nil, arrowEdge: .top)
                 } else {
                     Button {
                         showingAdvanced = true
                     } label: {
-                        Label("Add Advanced Search", systemImage: "plus.circle")
+                        HStack(spacing: 10) {
+                            paletteIcon("slider.horizontal.3", tint: .secondary)
+                            Text("Add Advanced Search")
+                        }
                     }
                     .disabled(true)
                     .opacity(0.5)
@@ -221,22 +258,35 @@ struct QueryTermsView: View {
             }
 
             Section {
-                Button {
-                    showResults = true
-                } label: {
-                    Text("Run Search")
+                VStack(spacing: 8) {
+                    Button {
+                        showResults = true
+                    } label: {
+                        HStack(spacing: 10) {
+                            paletteIcon("magnifyingglass", tint: .indigo)
+                                .scaleEffect(hasTopics ? (runSearchPulse ? 1.06 : 1.0) : 0.96)
+                            Text("Run Search")
+                        }
                         .frame(maxWidth: .infinity, alignment: .center)
-                }
-                .buttonStyle(.borderedProminent)
-                .disabled(!hasTopics)
+                    }
+                    .buttonStyle(.borderedProminent)
+                    .disabled(!hasTopics)
+                    .scaleEffect(hasTopics ? (runSearchPulse ? 1.03 : 1.0) : 0.985)
+                    .opacity(hasTopics ? 1.0 : 0.92)
+                    .animation(.easeInOut(duration: 0.18), value: runSearchPulse)
 
-                if !hasTopics {
-                    Text("Add at least one topic to run a search.")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                    if !hasTopics {
+                        Text("Add at least one topic to run a search.")
+                            .font(.footnote)
+                            .foregroundStyle(.secondary)
+                            .frame(maxWidth: .infinity, alignment: .center)
+                    }
                 }
+                .padding(.vertical, 4)
+                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             }
         }
+        .tint(.indigo)
         .navigationTitle("CardioThoraxia")
         .navigationSubtitleIfAvailable("Build Your Search")
         .toolbar {
@@ -250,6 +300,21 @@ struct QueryTermsView: View {
             }
         }
         .animation(.easeInOut(duration: 0.2), value: queryIsEmpty)
+        .onChange(of: showingAddTopic) { _, isShowing in
+            guard !isShowing, hasTopics else { return }
+            runSearchPulse = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                runSearchPulse = false
+            }
+        }
+        .onChange(of: hasTopics) { _, newValue in
+            // If topics become available while no sheet is covering the view, pulse once.
+            guard newValue, !showingAddTopic else { return }
+            runSearchPulse = true
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.25) {
+                runSearchPulse = false
+            }
+        }
         .alert("Clear all search criteria?", isPresented: $showingClearAllConfirm) {
             Button("Cancel", role: .cancel) { }
             Button("Clear All", role: .destructive) {
