@@ -6,17 +6,23 @@
 //
 
 import SwiftUI
+import SwiftData
 import TipKit
 
 struct QueryTermsView: View {
     @Binding var query: QueryDefinition
     let client: PubMedClient
+
+    @Query(sort: \SearchRecord.createdAt, order: .reverse)
+    private var searchHistory: [SearchRecord]
     private let addFirstTopicTip = AddFirstTopicTip()
     private let addAdvancedSearchTip = AddAdvancedSearchTip()
+    private let searchHistoryTip = SearchHistoryTip()
 
     @State private var showingAddTopic = false
     @State private var showingAdvanced = false
     @State private var showResults = false
+    @State private var showingHistory = false
     @State private var runSearchPulse = false
     
     @State private var showingClearAllConfirm = false
@@ -126,170 +132,222 @@ struct QueryTermsView: View {
         .accessibilityHidden(true)
     }
 
-    var body: some View {
-        Form {
-            Section("Selected Topics & Criteria") {
-                if groupBinding.wrappedValue.rules.isEmpty {
-                    ContentUnavailableView {
-                        VStack(spacing: 12) {
-                            paletteIcon("list.bullet.rectangle", tint: .indigo)
-                                .frame(width: 60, height: 60)
+    // MARK: - View Builders (break up body to help the compiler)
 
-                            Text("Start by adding a topic")
-                                .font(.headline)
-                        }
-                    } description: {
-                        Text(
-                            "Choose one or more topics to define the focus of your search. " +
-                            "You can refine it later with advanced criteria."
+    @ViewBuilder
+    private var selectedTopicsSection: some View {
+        Section("Selected Topics & Criteria") {
+            selectedTopicsAndCriteriaContent
+            addTopicButton
+            advancedSearchButton
+            addTopicHint
+        }
+    }
+
+    @ViewBuilder
+    private var selectedTopicsAndCriteriaContent: some View {
+        if groupBinding.wrappedValue.rules.isEmpty {
+            ContentUnavailableView {
+                VStack(spacing: 12) {
+                    paletteIcon("list.bullet.rectangle", tint: .indigo)
+                        .frame(width: 60, height: 60)
+
+                    Text("Start by adding a topic")
+                        .font(.headline)
+                }
+            } description: {
+                Text(
+                    "Choose one or more topics to define the focus of your search. " +
+                    "You can refine it later with advanced criteria."
+                )
+            }
+        } else {
+            topicsAndCriteriaList
+        }
+    }
+
+    @ViewBuilder
+    private var topicsAndCriteriaList: some View {
+        let group = groupBinding.wrappedValue
+
+        if topicNames.count >= 2 {
+            Picker(
+                "Match",
+                selection: Binding<GroupOp>(
+                    get: { groupBinding.wrappedValue.op },
+                    set: { groupBinding.wrappedValue.op = $0 }
+                )
+            ) {
+                Text("All topics").tag(GroupOp.and)
+                Text("Any topic").tag(GroupOp.or)
+            }
+            .pickerStyle(.segmented)
+
+            Text(groupBinding.wrappedValue.op == .and
+                 ? "All selected topics must match."
+                 : "Any selected topic can match (broader).")
+            .font(.footnote)
+            .foregroundStyle(.secondary)
+        }
+
+        ForEach(group.rules.indices, id: \.self) { index in
+            let rule = group.rules[index]
+
+            switch rule {
+            case .mesh(let term, let isPrimary):
+                Button {
+                    if case .mesh(let term, let isPrimary) = groupBinding.wrappedValue.rules[index] {
+                        editingTopic = EditingTopic(
+                            index: index,
+                            term: term,
+                            isPrimary: isPrimary
                         )
                     }
-                } else {
-                    let group = groupBinding.wrappedValue
-                    
-                    if topicNames.count >= 2 {
-                        Picker(
-                            "Match",
-                            selection: Binding<GroupOp>(
-                                get: { groupBinding.wrappedValue.op },
-                                set: { groupBinding.wrappedValue.op = $0 }
-                            )
-                        ) {
-                            Text("All topics").tag(GroupOp.and)
-                            Text("Any topic").tag(GroupOp.or)
+                } label: {
+                    HStack(alignment: .firstTextBaseline) {
+                        VStack(alignment: .leading, spacing: 2) {
+                            Text("Topic")
+                                .font(.headline)
+
+                            Text(isPrimary ? "\(term) (Primary)" : term)
+                                .foregroundStyle(.secondary)
+
+                            Text("Tap to edit or swipe left to delete")
+                                .font(.caption)
+                                .foregroundStyle(.tertiary)
                         }
-                        .pickerStyle(.segmented)
-
-                        Text(groupBinding.wrappedValue.op == .and
-                             ? "All selected topics must match."
-                             : "Any selected topic can match (broader).")
-                        .font(.footnote)
-                        .foregroundStyle(.secondary)
+                        Spacer()
                     }
-
-                    ForEach(group.rules.indices, id: \.self) { index in
-                        let rule = group.rules[index]
-
-                        switch rule {
-                        case .mesh(let term, let isPrimary):
-                            Button {
-                                if case .mesh(let term, let isPrimary) = groupBinding.wrappedValue.rules[index] {
-                                    editingTopic = EditingTopic(
-                                        index: index,
-                                        term: term,
-                                        isPrimary: isPrimary
-                                    )
-                                }
-                            } label: {
-                                HStack(alignment: .firstTextBaseline) {
-                                    VStack(alignment: .leading, spacing: 2) {
-                                        Text("Topic")
-                                            .font(.headline)
-
-                                        Text(isPrimary ? "\(term) (Primary)" : term)
-                                            .foregroundStyle(.secondary)
-
-                                        Text("Tap to edit or swipe left to delete")
-                                            .font(.caption)
-                                            .foregroundStyle(.tertiary)
-                                    }
-                                    Spacer()
-                                }
-                                .padding(.vertical, 4)
-                                .contentShape(Rectangle())
-                            }
-                            .buttonStyle(.plain)
-
-                        default:
-                            // Keep showing non-topic rules as normal rows for now
-                            QueryRuleRow(rule: rule)
-                        }
-                    }
-                    .onDelete { indexSet in
-                        groupBinding.wrappedValue.rules.remove(atOffsets: indexSet)
-                    }
-                    
+                    .padding(.vertical, 4)
+                    .contentShape(Rectangle())
                 }
+                .buttonStyle(.plain)
 
+            default:
+                QueryRuleRow(rule: rule)
+            }
+        }
+        .onDelete { indexSet in
+            groupBinding.wrappedValue.rules.remove(atOffsets: indexSet)
+        }
+    }
+
+    private var addTopicButton: some View {
+        Button {
+            showingAddTopic = true
+        } label: {
+            HStack(spacing: 10) {
+                paletteIcon("plus", tint: .blue)
+                Text(hasTopics ? "Add Another Topic" : "Add First Topic")
+            }
+        }
+        .popoverTip(didShowNotificationPrePrompt ? addFirstTopicTip : nil, arrowEdge: .top)
+    }
+
+    private var advancedSearchButton: some View {
+        Group {
+            if hasTopics {
                 Button {
-                    showingAddTopic = true
+                    showingAdvanced = true
                 } label: {
                     HStack(spacing: 10) {
-                        paletteIcon("plus", tint: .blue)
-                        Text(hasTopics ? "Add Another Topic" : "Add First Topic")
+                        paletteIcon("slider.horizontal.3", tint: .teal)
+                        Text("Add Advanced Search")
                     }
                 }
-                .popoverTip(didShowNotificationPrePrompt ? addFirstTopicTip : nil, arrowEdge: .top)
-                
-                if hasTopics {
-                    Button {
-                        showingAdvanced = true
-                    } label: {
-                        HStack(spacing: 10) {
-                            paletteIcon("slider.horizontal.3", tint: .teal)
-                            Text("Add Advanced Search")
-                        }
+                .popoverTip(didShowNotificationPrePrompt ? addAdvancedSearchTip : nil, arrowEdge: .top)
+            } else {
+                Button {
+                    showingAdvanced = true
+                } label: {
+                    HStack(spacing: 10) {
+                        paletteIcon("slider.horizontal.3", tint: .secondary)
+                        Text("Add Advanced Search")
                     }
-                    .popoverTip(didShowNotificationPrePrompt ? addAdvancedSearchTip : nil, arrowEdge: .top)
-                } else {
-                    Button {
-                        showingAdvanced = true
-                    } label: {
-                        HStack(spacing: 10) {
-                            paletteIcon("slider.horizontal.3", tint: .secondary)
-                            Text("Add Advanced Search")
-                        }
-                    }
-                    .disabled(true)
-                    .opacity(0.5)
                 }
-                
+                .disabled(true)
+                .opacity(0.5)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var addTopicHint: some View {
+        if !hasTopics {
+            Text("Add a topic first to define the focus of your search.")
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var howThisWorksSection: some View {
+        Section("How this works") {
+            Text(reassuranceText)
+                .font(.footnote)
+                .foregroundStyle(.secondary)
+        }
+    }
+
+    private var runSearchSection: some View {
+        Section {
+            VStack(spacing: 8) {
+                Button {
+                    showResults = true
+                } label: {
+                    HStack(spacing: 10) {
+                        paletteIcon("magnifyingglass", tint: .indigo)
+                            .scaleEffect(hasTopics ? (runSearchPulse ? 1.06 : 1.0) : 0.96)
+                        Text("Run Search")
+                    }
+                    .frame(maxWidth: .infinity, alignment: .center)
+                }
+                .buttonStyle(.borderedProminent)
+                .disabled(!hasTopics)
+                .scaleEffect(hasTopics ? (runSearchPulse ? 1.03 : 1.0) : 0.985)
+                .opacity(hasTopics ? 1.0 : 0.92)
+                .animation(.easeInOut(duration: 0.18), value: runSearchPulse)
+
                 if !hasTopics {
-                    Text("Add a topic first to define the focus of your search.")
+                    Text("Add at least one topic to run a search.")
                         .font(.footnote)
                         .foregroundStyle(.secondary)
-                }
-            }
-            
-            Section("How this works") {
-                Text(reassuranceText)
-                    .font(.footnote)
-                    .foregroundStyle(.secondary)
-            }
-
-            Section {
-                VStack(spacing: 8) {
-                    Button {
-                        showResults = true
-                    } label: {
-                        HStack(spacing: 10) {
-                            paletteIcon("magnifyingglass", tint: .indigo)
-                                .scaleEffect(hasTopics ? (runSearchPulse ? 1.06 : 1.0) : 0.96)
-                            Text("Run Search")
-                        }
                         .frame(maxWidth: .infinity, alignment: .center)
-                    }
-                    .buttonStyle(.borderedProminent)
-                    .disabled(!hasTopics)
-                    .scaleEffect(hasTopics ? (runSearchPulse ? 1.03 : 1.0) : 0.985)
-                    .opacity(hasTopics ? 1.0 : 0.92)
-                    .animation(.easeInOut(duration: 0.18), value: runSearchPulse)
-
-                    if !hasTopics {
-                        Text("Add at least one topic to run a search.")
-                            .font(.footnote)
-                            .foregroundStyle(.secondary)
-                            .frame(maxWidth: .infinity, alignment: .center)
-                    }
                 }
-                .padding(.vertical, 4)
-                .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
             }
+            .padding(.vertical, 4)
+            .listRowInsets(EdgeInsets(top: 8, leading: 16, bottom: 8, trailing: 16))
+        }
+    }
+
+    var body: some View {
+        Form {
+            // Reliable TipKit placement (toolbar popovers can be inconsistent)
+            if !searchHistory.isEmpty {
+                Section {
+                    TipView(searchHistoryTip)
+                        .onTapGesture {
+                            showingHistory = true
+                        }
+                }
+            }
+
+            selectedTopicsSection
+            howThisWorksSection
+            runSearchSection
         }
         .tint(.indigo)
         .navigationTitle("CardioThoraxia")
         .navigationSubtitleIfAvailable("Build Your Search")
         .toolbar {
+            ToolbarItem(placement: .topBarLeading) {
+                if !searchHistory.isEmpty {
+                    Button {
+                        showingHistory = true
+                    } label: {
+                        Label("History", systemImage: "clock")
+                    }
+                }
+            }
             ToolbarItem(placement: .topBarTrailing) {
                 if !queryIsEmpty {
                     Button("Clear All") {
@@ -332,6 +390,9 @@ struct QueryTermsView: View {
 
         .navigationDestination(isPresented: $showResults) {
             SearchResultsView(query: query, client: client)
+        }
+        .navigationDestination(isPresented: $showingHistory) {
+            SearchHistoryView(client: client)
         }
         .sheet(isPresented: $showingAddTopic) {
             NavigationStack {

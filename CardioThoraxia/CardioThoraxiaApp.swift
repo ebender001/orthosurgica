@@ -54,7 +54,11 @@ struct CardioThoraxiaApp: App {
                     }
                 }
         }
-        .modelContainer(for: [FeedRecord.self, ArticleRecord.self])
+        .modelContainer(for: [
+            FeedRecord.self,
+            ArticleRecord.self,
+            SearchRecord.self
+        ])
     }
 }
 
@@ -101,5 +105,19 @@ struct SuggestTopicTip: Tip {
 
     var image: Image? {
         Image(systemName: "lightbulb")
+    }
+}
+
+struct SearchHistoryTip: Tip {
+    var title: Text {
+        Text("Search history")
+    }
+    
+    var message: Text? {
+        Text("Review your past searches and find related content more easily.")
+    }
+    
+    var image: Image? {
+        Image(systemName: "clock")
     }
 }
