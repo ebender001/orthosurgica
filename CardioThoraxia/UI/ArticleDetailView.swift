@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import StoreKit
 
 // MARK: - AI Insight UI
 
@@ -18,10 +19,12 @@ struct ArticleDetailView: View {
     }
     
     @StateObject private var aiVM = ArticleAIViewModel()
+    @EnvironmentObject private var subs: SubscriptionManager
 
+    @State private var showingPaywall = false
     @State private var showingAIInsightSheet = false
-
     @State private var sharePayload: SharePayload?
+    
     @Environment(\.colorScheme) private var colorScheme
 
     private var pubmedURL: URL {
@@ -185,10 +188,18 @@ struct ArticleDetailView: View {
 
                     Button {
                         // TODO: Wire to AI Insight generation + paywall gating
-                        Task { await aiVM.generate(for: article) }
+                        if subs.hasActiveSubscription {
+                            Task { await aiVM.generate(for: article) }
+                        } else {
+                            showingPaywall = true
+                        }
                     } label: {
                         Label {
-                            Text(aiVM.isLoading ? "Generating..." : "AI Insight")
+                            if aiVM.isLoading {
+                                Text("Generating...")
+                                } else {
+                                    Text(subs.hasActiveSubscription ? "AI Insight" : "Unlock AI Insight")
+                                }
                         } icon: {
                             Image(systemName: "sparkles")
                                 .symbolRenderingMode(.hierarchical)
@@ -211,6 +222,7 @@ struct ArticleDetailView: View {
                         .sheet(isPresented: $showingAIInsightSheet) {
                             AIInsightSheetView(insight: insight)
                         }
+                        
                     }
 
                     Text(abstract)
@@ -237,6 +249,10 @@ struct ArticleDetailView: View {
         }
         .sheet(item: $sharePayload) { payload in
             ShareSheet(items: payload.items)
+        }
+        .sheet(isPresented: $showingPaywall) {
+            ProfessionalPaywallView()
+                .environmentObject(subs)
         }
     }
 }

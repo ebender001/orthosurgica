@@ -14,6 +14,7 @@ import ParseSwift
 struct CardioThoraxiaApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var meshManager = MeshCatalogManager()
+    @StateObject private var subscriptionManager = SubscriptionManager()
     @UIApplicationDelegateAdaptor(PushNotificationsDelegate.self) private var pushDelegate
     
     init() {
@@ -47,9 +48,14 @@ struct CardioThoraxiaApp: App {
         WindowGroup {
             ContentView()
                 .environmentObject(meshManager)
-                .task { await meshManager.loadRemote() }
+                .environmentObject(subscriptionManager)
+                .task {
+                    subscriptionManager.start()
+                    await meshManager.loadRemote()
+                }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active {
+                        subscriptionManager.start()
                         Task { await meshManager.loadRemote() }
                     }
                 }
