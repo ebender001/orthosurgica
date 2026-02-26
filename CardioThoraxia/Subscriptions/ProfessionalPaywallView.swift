@@ -14,9 +14,6 @@ struct ProfessionalPaywallView: View {
     @EnvironmentObject private var subs: SubscriptionManager
     @Environment(\.dismiss) private var dismiss
 
-    /// Optional: show “3 free insights” line if you’re planning to offer it.
-    var showsFreeTrialLine: Bool = true
-    var freeTrialLineText: String = "Includes 3 complimentary AI insights."
 
     var body: some View {
         NavigationStack {
@@ -25,21 +22,13 @@ struct ProfessionalPaywallView: View {
 
                     header
 
-                    if showsFreeTrialLine {
-                        CalloutPill(
-                            icon: "sparkles",
-                            title: freeTrialLineText,
-                            style: .info
-                        )
-                    }
+                    plansSection
+
+                    restoreSection
 
                     previewCard
 
                     valueBullets
-
-                    plansSection
-
-                    restoreSection
 
                     footerTrust
                 }
@@ -95,14 +84,6 @@ struct ProfessionalPaywallView: View {
 
                 PreviewSection(title: "One-Sentence Takeaway") {
                     Text("Preoperative renal function independently predicts early morbidity and mortality following aortic arch surgery.")
-                }
-
-                PreviewSection(title: "Study Snapshot") {
-                    VStack(alignment: .leading, spacing: 6) {
-                        PreviewBullet("Retrospective cohort")
-                        PreviewBullet("1,077 patients")
-                        PreviewBullet("30-day outcomes assessed")
-                    }
                 }
 
                 PreviewSection(title: "Practice Relevance") {
@@ -196,7 +177,13 @@ struct ProfessionalPaywallView: View {
                     .premiumEyebrow()
 
                 Button {
-                    Task { await subs.restorePurchases() }
+                    Task {
+                        await subs.restorePurchases()
+                        #if DEBUG
+                        await subs.debugCurrentEntitlements()
+                        await subs.debugLatestMonthly()
+                        #endif
+                    }
                 } label: {
                     HStack {
                         Image(systemName: "arrow.clockwise")
@@ -206,6 +193,7 @@ struct ProfessionalPaywallView: View {
                     .font(.headline)
                 }
                 .buttonStyle(.borderless)
+                .disabled(subs.isRestoring)
 
                 Text("Restore access for subscriptions associated with this Apple ID.")
                     .font(.footnote)
@@ -225,8 +213,8 @@ struct ProfessionalPaywallView: View {
 
             HStack(spacing: 16) {
                 Spacer()
-                Link("Terms of Use", destination: URL(string: "https://benderapps.net/terms")!)
-                Link("Privacy Policy", destination: URL(string: "https://benderapps.net/privacy")!)
+                Link("Terms of Use", destination: AppLinks.terms)
+                Link("Privacy Policy", destination: AppLinks.privacy)
                 Spacer()
             }
             .font(.footnote.weight(.semibold))
@@ -254,8 +242,27 @@ struct ProfessionalPaywallView: View {
         product.id.lowercased().contains("annual") || product.displayName.lowercased().contains("annual")
     }
 
+    private func annualMonthlyEquivalent(for product: Product) -> String? {
+        guard let sub = product.subscription else { return nil }
+        // Only show for yearly products.
+        guard sub.subscriptionPeriod.unit == .year else { return nil }
+
+        let monthly = product.price / Decimal(12)
+
+        // Use the product’s currency (StoreKit always provides one for the product).
+        let currencyCode = product.priceFormatStyle.currencyCode
+
+        let monthlyText = monthly.formatted(.currency(code: currencyCode))
+        return "\(monthlyText)/mo billed annually"
+    }
+
     private func planSubtitle(for product: Product) -> String {
-        if isAnnual(product) { return "Best value for active clinicians" }
+        if isAnnual(product) {
+            if let equiv = annualMonthlyEquivalent(for: product) {
+                return "Best value • \(equiv)"
+            }
+            return "Best value for active clinicians"
+        }
         return "Flexible access"
     }
 }

@@ -10,6 +10,7 @@ import ParseSwift
 
 protocol AIInsightServicing {
     func generateInsight(for article: Article) async throws -> AIInsight
+    func fetchQuota() async throws -> Int
 }
 
 // MARK: - ParseSwift Cloud Function
@@ -28,8 +29,20 @@ private struct GenerateAIInsightFunction: ParseCloudable {
     var publicationTypes: [String]
     var meshHeadings: [String]
     var abstractText: String
+    var deviceToken: String
 }
 
+private struct GetAIQuotaFunction: ParseCloudable {
+    typealias ReturnType = AIQuotaResponse
+
+    var functionJobName: String = "getAIQuota"
+
+    var deviceToken: String
+}
+
+struct AIQuotaResponse: Codable {
+    let guestRemaining: Int
+}
 private extension ParseCloudable {
     /// Convenience async wrapper around ParseSwift's callback-based `runFunction`.
     func runFunctionAsync() async throws -> ReturnType {
@@ -57,9 +70,19 @@ struct AIInsightService: AIInsightServicing {
             month: article.month ?? "",
             publicationTypes: article.publicationTypes,
             meshHeadings: article.meshHeadings,
-            abstractText: article.abstractText ?? ""
+            abstractText: article.abstractText ?? "",
+            deviceToken: DeviceToken.getOrCreate()
         )
 
         return try await function.runFunctionAsync()
+    }
+    
+    func fetchQuota() async throws -> Int {
+        let function = GetAIQuotaFunction(
+            deviceToken: DeviceToken.getOrCreate()
+        )
+
+        let response = try await function.runFunctionAsync()
+        return response.guestRemaining
     }
 }

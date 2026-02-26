@@ -21,10 +21,66 @@ final class ArticleAIViewModel: ObservableObject {
 
     @Published private(set) var state: State = .idle
 
+    /// Prevents duplicate concurrent generations (e.g., double-tap) and allows cancellation.
+    private var generateTask: Task<Void, Never>?
+
+    // MARK: - CTA (AI button)
+
+    struct AIQuotaSnapshot: Equatable {
+        /// Remaining guest complimentary insights (nil if unknown).
+        var guestRemaining: Int?
+        /// Remaining signed-in complimentary insights (nil if unknown).
+        var userRemaining: Int?
+        /// Whether the user is signed in (e.g., Parse user present / SIWA completed).
+        var isSignedIn: Bool
+
+        static let unknown = AIQuotaSnapshot(guestRemaining: nil, userRemaining: nil, isSignedIn: false)
+    }
+
+    @Published private(set) var ctaState: AIInsightCTAState = .loading
+
+    enum GateAction: Equatable {
+        case signInRequired
+        case subscriptionRequired
+        case updateRequired
+    }
+
+    /// One-shot UI signal. The view can observe this and present SIWA / Paywall.
+    @Published var gateAction: GateAction? = nil
+
+    @Published var quota: AIQuotaSnapshot = .unknown {
+        didSet { recomputeCTAIfPossible() }
+    }
+
+    /// StoreKit subscription state (injected from outside; kept optional so this VM compiles even before wiring).
+    private var entitlement: SubscriptionManager.EntitlementState = .unknown {
+        didSet { recomputeCTAIfPossible() }
+    }
+
     private let service: AIInsightServicing
 
     init(service: AIInsightServicing = AIInsightService()) {
         self.service = service
+    }
+
+    /// Call this from the view whenever subscription state changes (e.g., `.onAppear` and `.onChange`).
+    func updateEntitlement(_ entitlement: SubscriptionManager.EntitlementState) {
+        self.entitlement = entitlement
+    }
+    
+
+    /// Call this from the view whenever auth/quota changes.
+    func updateQuota(guestRemaining: Int?, userRemaining: Int?, isSignedIn: Bool) {
+        self.quota = AIQuotaSnapshot(guestRemaining: guestRemaining, userRemaining: userRemaining, isSignedIn: isSignedIn)
+    }
+
+    private func recomputeCTAIfPossible() {
+        // Compute CTA from subscription + quota. Loading state is handled by the view via `.disabled(isLoading)`.
+        ctaState = AIInsightCTAState.resolve(
+            entitlement: entitlement,
+            isSignedIn: quota.isSignedIn,
+            guestFreeRemaining: quota.guestRemaining
+        )
     }
 
     // MARK: - Derived UI Helpers
@@ -39,26 +95,133 @@ final class ArticleAIViewModel: ObservableObject {
         return false
     }
 
+    var isGenerateButtonDisabled: Bool {
+        // Disable while loading or once an insight has already been generated.
+        if case .loaded = state { return true }
+        return isLoading
+    }
+
     var errorMessage: String? {
         if case .failed(let message) = state { return message }
         return nil
     }
 
-    // MARK: - Public API
+// MARK: - Public API
+func refreshGuestQuota() async {
+    // Guest quota only applies when not signed in.
+    guard quota.isSignedIn == false else { return }
+
+    do {
+        let remaining = try await service.fetchQuota()
+        // Preserve the current signed-in flag (should be false here).
+        updateQuota(guestRemaining: remaining, userRemaining: nil, isSignedIn: quota.isSignedIn)
+    } catch {
+        #if DEBUG
+        print("fetchQuota failed:", (error as NSError).localizedDescription)
+        #endif
+        // Leave quota unchanged (nil/unknown) on failure.
+    }
+}
 
     func generate(for article: Article) async {
-        state = .loading
+        // Re-entrancy guard: ignore if already generating.
+        guard !isLoading else { return }
 
-        do {
-            let insight = try await service.generateInsight(for: article)
-            state = .loaded(insight)
-        } catch {
-            state = .failed(userFacingMessage(from: error))
+        // If an insight already exists for this article, don't regenerate.
+        if case .loaded = state { return }
+
+        // Cancel any prior in-flight task defensively.
+        generateTask?.cancel()
+
+        state = .loading
+        recomputeCTAIfPossible()
+
+        generateTask = Task { [weak self] in
+            guard let self else { return }
+
+            do {
+                let insight = try await self.service.generateInsight(for: article)
+
+                // If canceled, don't update UI.
+                guard !Task.isCancelled else { return }
+
+                self.state = .loaded(insight)
+                self.recomputeCTAIfPossible()
+            } catch {
+                guard !Task.isCancelled else { return }
+
+                // If Cloud Code sent a structured payload (quota gates, etc.),
+                // treat it as a CTA state transition rather than a generic failure.
+                if let payload = self.decodeAIInsightServerPayload(from: error) {
+                    #if DEBUG
+                    if let debug = payload.debugMessage {
+                        print("AI Insight Debug:", debug)
+                    }
+                    #endif
+
+                    if payload.requiresUpdate == true {
+                        // Guide via UI (e.g., show an update sheet) rather than a generic red error.
+                        self.state = .idle
+                        self.gateAction = .updateRequired
+                        return
+                    }
+
+                    if payload.requiresSignIn == true {
+                        // Guest free quota exhausted.
+                        self.state = .idle
+                        // Force CTA to transition to sign-in by updating quota.
+                        self.quota = AIQuotaSnapshot(
+                            guestRemaining: 0,
+                            userRemaining: self.quota.userRemaining,
+                            isSignedIn: false
+                        )
+                        self.gateAction = .signInRequired
+                        self.recomputeCTAIfPossible()
+                        return
+                    }
+
+                    if payload.requiresSubscription == true {
+                        // Signed-in free quota exhausted OR subscription required.
+                        self.state = .idle
+                        // Force CTA to transition to subscription by updating quota.
+                        self.quota = AIQuotaSnapshot(
+                            guestRemaining: self.quota.guestRemaining,
+                            userRemaining: 0,
+                            isSignedIn: self.quota.isSignedIn
+                        )
+                        self.gateAction = .subscriptionRequired
+                        self.recomputeCTAIfPossible()
+                        return
+                    }
+
+                    // Non-gating server message: show it.
+                    if let msg = payload.userMessage, !msg.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty {
+                        self.state = .failed(msg)
+                    } else {
+                        self.state = .failed(self.userFacingMessage(from: error))
+                    }
+
+                    self.recomputeCTAIfPossible()
+                    return
+                }
+
+                // Non-JSON / networking / parsing error
+                self.state = .failed(self.userFacingMessage(from: error))
+                self.recomputeCTAIfPossible()
+            }
         }
+
+        // Await completion so callers that `await` this method still behave predictably.
+        await generateTask?.value
+        generateTask = nil
     }
 
     func reset() {
+        generateTask?.cancel()
+        generateTask = nil
+        gateAction = nil
         state = .idle
+        recomputeCTAIfPossible()
     }
 
     // MARK: - Error Handling
@@ -71,18 +234,6 @@ final class ArticleAIViewModel: ObservableObject {
         print("AI Insight Raw Error:", rawMessage)
         #endif
 
-        // If Cloud Code sent structured JSON { userMessage, debugMessage }
-        if let data = rawMessage.data(using: .utf8),
-           let json = try? JSONSerialization.jsonObject(with: data) as? [String: Any],
-           let userMessage = json["userMessage"] as? String {
-
-            if let debug = json["debugMessage"] as? String {
-                print("AI Insight Debug:", debug)
-            }
-
-            return userMessage
-        }
-
         // Parse / Network common cases
         // Be careful: don't match the generic substring "rate" (it appears in many unrelated words).
         let lower = rawMessage.lowercased()
@@ -90,21 +241,58 @@ final class ArticleAIViewModel: ObservableObject {
             return "AI Insight is temporarily busy. Please try again shortly."
         }
 
-        if rawMessage.contains("403") || rawMessage.lowercased().contains("quota") {
-            return "You have reached your AI Insight limit. Please upgrade or try again later."
+        if rawMessage.contains("403") || lower.contains("quota") {
+            return "You have reached your AI Insight limit. Please upgrade to continue."
         }
 
-        if rawMessage.lowercased().contains("network") ||
-           rawMessage.lowercased().contains("timed out") {
+        if lower.contains("network") || lower.contains("timed out") {
             return "Network issue while generating AI Insight. Please check your connection and try again."
         }
 
-        if rawMessage.lowercased().contains("invalid_json") ||
-           rawMessage.lowercased().contains("non-json") {
+        if lower.contains("invalid_json") || lower.contains("non-json") {
             return "AI Insight response could not be processed. Please try again."
         }
 
         // Safe fallback
         return "We couldn’t generate AI Insight right now. Please try again."
+    }
+
+    // MARK: - Server Error Payload (Cloud Code JSON)
+
+    private struct AIInsightServerErrorPayload: Decodable {
+        let userMessage: String?
+        let debugMessage: String?
+        let requiresSignIn: Bool?
+        let requiresSubscription: Bool?
+        let requiresUpdate: Bool?
+    }
+
+    private func decodeAIInsightServerPayload(from error: Error) -> AIInsightServerErrorPayload? {
+        // ParseSwift/Parse often wraps the server message, so the JSON may be embedded inside other text.
+        let candidates: [String] = [
+            (error as NSError).localizedDescription,
+            String(describing: error)
+        ]
+
+        for s in candidates {
+            // Fast path
+            if let data = s.data(using: .utf8), let payload = try? JSONDecoder().decode(AIInsightServerErrorPayload.self, from: data) {
+                return payload
+            }
+
+            // Embedded JSON path: extract the substring between the first '{' and the last '}'.
+            guard let first = s.firstIndex(of: "{"), let last = s.lastIndex(of: "}") , first < last else {
+                continue
+            }
+
+            let jsonSubstring = String(s[first...last])
+            guard let data = jsonSubstring.data(using: .utf8) else { continue }
+
+            if let payload = try? JSONDecoder().decode(AIInsightServerErrorPayload.self, from: data) {
+                return payload
+            }
+        }
+
+        return nil
     }
 }

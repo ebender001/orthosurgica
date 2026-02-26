@@ -21,11 +21,6 @@ final class MeshCatalogManager: ObservableObject {
             .sink { [weak self] note in
                 guard let self else { return }
 
-                #if DEBUG
-                let v = note.userInfo?["version"] as? String
-                print("Received meshCatalogUpdated notification. version=\(v ?? "nil")")
-                #endif
-
                 Task { await self.loadRemote() }
             }
             .store(in: &cancellables)
@@ -100,9 +95,9 @@ final class MeshCatalogManager: ObservableObject {
             // Preview helps catch HTML / error payloads / wrong JSON structure
             let preview = String(data: data, encoding: .utf8)
                 .map { String($0.prefix(5000)) } ?? "<non-utf8 data>"
-            #if DEBUG
-            print("Preview:", preview)
-            #endif
+//            #if DEBUG
+//            print("Preview:", preview)
+//            #endif
 
             // If remote version matches cached version AND we already have a catalog loaded,
             // we can skip decoding/writing.

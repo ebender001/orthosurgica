@@ -9,6 +9,7 @@ import SwiftUI
 import SwiftData
 import TipKit
 import ParseSwift
+import StoreKit
 
 @main
 struct CardioThoraxiaApp: App {
@@ -33,15 +34,23 @@ struct CardioThoraxiaApp: App {
         let clientKey = plist("PARSE_CLIENT_KEY")
         let serverURL = URL(string: plist("PARSE_SERVER_URL"))!
         
-        #if DEBUG
-        print("PARSE_SERVER_URL =", plist("PARSE_SERVER_URL"))
-        #endif
-        
         ParseSwift.initialize(
             applicationId: appId,
             clientKey: clientKey,
             serverURL: serverURL
         )
+    }
+    
+    @MainActor
+    func validateSessionIfNeeded() async {
+        guard let current = User.current else { return }
+        do {
+            _ = try await current.fetch()
+        } catch {
+            if let pe = error as? ParseError, pe.code == .invalidSessionToken {
+                _ = try? await User.logout()
+            }
+        }
     }
     
     var body: some Scene {
@@ -50,13 +59,28 @@ struct CardioThoraxiaApp: App {
                 .environmentObject(meshManager)
                 .environmentObject(subscriptionManager)
                 .task {
+                    await validateSessionIfNeeded()
+
+                    // Start StoreKit listeners + load products/entitlement on launch.
                     subscriptionManager.start()
+
+                    // Ensure entitlement is refreshed promptly on fresh installs/reinstalls so UI gates correctly.
+                    await subscriptionManager.refreshProductsAndEntitlement()
+
                     await meshManager.loadRemote()
                 }
                 .onChange(of: scenePhase) { _, phase in
                     if phase == .active {
-                        subscriptionManager.start()
-                        Task { await meshManager.loadRemote() }
+                        // When returning to foreground, refresh entitlement (and re-sync to server) to keep gating accurate.
+                        Task {
+                            await validateSessionIfNeeded()
+                            await subscriptionManager.refreshProductsAndEntitlement()
+                            await meshManager.loadRemote()
+                            #if DEBUG
+                            await subscriptionManager.debugCurrentEntitlements()
+                            await subscriptionManager.debugLatestMonthly()
+                            #endif
+                        }
                     }
                 }
         }

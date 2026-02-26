@@ -114,7 +114,7 @@ extension ArticleRecord {
             sortBy: [SortDescriptor(\.fetchedAt, order: .reverse)]
         )
 
-        var matches = try context.fetch(descriptor)
+        let matches = try context.fetch(descriptor)
 
         // If duplicates exist, keep the newest and delete the rest.
         let record: ArticleRecord
