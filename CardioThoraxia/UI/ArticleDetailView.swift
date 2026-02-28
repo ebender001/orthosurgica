@@ -8,19 +8,22 @@
 import SwiftUI
 import StoreKit
 import ParseSwift
+import AuthenticationServices
 
 // MARK: - AI Insight UI
 
 struct ArticleDetailView: View {
     let article: Article
     let timeoutNanoseconds: UInt64 = 10_000_000_000 // 10 seconds
+    private let didCompleteSIWAKey = "didCompleteSIWA"
 
     private struct SharePayload: Identifiable {
         let id = UUID()
         let items: [Any]
     }
     
-    @StateObject private var aiVM = ArticleAIViewModel()
+//    @StateObject private var aiVM = ArticleAIViewModel()
+    @EnvironmentObject private var aiVM: ArticleAIViewModel
     @EnvironmentObject private var subs: SubscriptionManager
 
     @State private var showingPaywall = false
@@ -33,6 +36,42 @@ struct ArticleDetailView: View {
     @State private var showSlowLoadingHint = false
     
     @Environment(\.colorScheme) private var colorScheme
+
+    private func isSignedInWithApple() -> Bool {
+        // Parse may maintain an anonymous session token; only treat as “signed in”
+        // after the user completes Sign in with Apple at least once.
+        let hasSession = (User.current?.sessionToken?.isEmpty == false)
+        let didCompleteSIWA = UserDefaults.standard.bool(forKey: didCompleteSIWAKey)
+        return hasSession && didCompleteSIWA
+    }
+
+    private func friendlySIWAError(_ error: Error) -> String? {
+        let ns = error as NSError
+
+        // Treat user cancel/abort as a non-error (no red message).
+        if ns.domain == ASAuthorizationError.errorDomain {
+            if ns.code == ASAuthorizationError.Code.canceled.rawValue {
+                return nil
+            }
+            // Some environments (simulator / certain flows) can surface 1000 (unknown) when the user aborts.
+            // Don't show a scary message for that.
+            if ns.code == ASAuthorizationError.Code.unknown.rawValue {
+                return nil
+            }
+
+            switch ASAuthorizationError.Code(rawValue: ns.code) {
+            case .invalidResponse, .notHandled, .failed:
+                return "Sign in with Apple didn’t complete. Please try again."
+            case .notInteractive:
+                return "Sign in with Apple couldn’t start in this context. Please try again."
+            default:
+                break
+            }
+        }
+
+        // Fallback for any other error types.
+        return "Sign in with Apple didn’t complete. Please try again."
+    }
 
     private var pubmedURL: URL {
         URL(string: "https://pubmed.ncbi.nlm.nih.gov/\(article.id)/")!
@@ -335,11 +374,13 @@ struct ArticleDetailView: View {
                 }
             },
             onCancel: {
-                // optional: no-op or analytics
+                // User canceled/aborted sign-in: treat as no-op and avoid scary errors.
+                authErrorMessage = nil
+                showingSIWA = false
             },
             onFailure: { error in
-                // optional: log/analytics
-                authErrorMessage = error.localizedDescription
+                // Show a friendly message (or nothing for user-cancel/abort).
+                authErrorMessage = friendlySIWAError(error)
             }
         )
     }
@@ -352,12 +393,13 @@ struct ArticleDetailView: View {
     var body: some View {
         mainContent
             .onAppear {
+                aiVM.setActiveArticle(article.id)
                 aiVM.updateEntitlement(subs.entitlement)
 
-                let signedIn = (User.current != nil) && ((User.current?.sessionToken?.isEmpty == false))
+                let signedIn = isSignedInWithApple()
                 aiVM.updateQuota(guestRemaining: nil, userRemaining: nil, isSignedIn: signedIn)
 
-                if !signedIn {
+                if !signedIn, aiVM.quota.guestRemaining == nil {
                     Task { await aiVM.refreshGuestQuota() }
                 }
             }
@@ -430,9 +472,10 @@ struct ArticleDetailView: View {
 
         // Clear any prior auth error.
         authErrorMessage = nil
+        UserDefaults.standard.set(true, forKey: didCompleteSIWAKey)
 
         // Derive signed-in state from Parse (source of truth).
-        let signedIn = (User.current != nil) && ((User.current?.sessionToken?.isEmpty == false))
+        let signedIn = isSignedInWithApple()
 
         // Signed-in users have no additional freebies in your Phase 2.
         aiVM.updateQuota(

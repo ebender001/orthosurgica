@@ -16,6 +16,7 @@ struct CardioThoraxiaApp: App {
     @Environment(\.scenePhase) private var scenePhase
     @StateObject private var meshManager = MeshCatalogManager()
     @StateObject private var subscriptionManager = SubscriptionManager()
+    @StateObject private var aiVM = ArticleAIViewModel()
     @UIApplicationDelegateAdaptor(PushNotificationsDelegate.self) private var pushDelegate
     
     init() {
@@ -58,6 +59,7 @@ struct CardioThoraxiaApp: App {
             ContentView()
                 .environmentObject(meshManager)
                 .environmentObject(subscriptionManager)
+                .environmentObject(aiVM)
                 .task {
                     await validateSessionIfNeeded()
 

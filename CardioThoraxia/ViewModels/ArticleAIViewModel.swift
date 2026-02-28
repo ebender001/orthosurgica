@@ -24,6 +24,24 @@ final class ArticleAIViewModel: ObservableObject {
     /// Prevents duplicate concurrent generations (e.g., double-tap) and allows cancellation.
     private var generateTask: Task<Void, Never>?
 
+    // Track which article this VM is currently representing.
+    private(set) var activeArticleId: String?
+
+    /// Call when an article detail view appears.
+    /// If the article changes, clear prior insight/loading/error state so we don't show the previous article's insight.
+    func setActiveArticle(_ id: String) {
+        if activeArticleId != id {
+            activeArticleId = id
+            generateTask?.cancel()
+            generateTask = nil
+            gateAction = nil
+            state = .idle
+        }
+    }
+    
+    private let localGuestQuotaKey = "localGuestAIInsightsRemaining"
+    private let localGuestQuotaDefault = 3
+
     // MARK: - CTA (AI button)
 
     struct AIQuotaSnapshot: Equatable {
@@ -61,6 +79,22 @@ final class ArticleAIViewModel: ObservableObject {
 
     init(service: AIInsightServicing = AIInsightService()) {
         self.service = service
+        
+        let guest = loadLocalGuestRemaining()
+        quota = AIQuotaSnapshot(guestRemaining: guest, userRemaining: nil, isSignedIn: false)
+        recomputeCTAIfPossible()
+    }
+    
+    private func loadLocalGuestRemaining() -> Int {
+        let defaults = UserDefaults.standard
+        if defaults.object(forKey: localGuestQuotaKey) == nil {
+            defaults.set(localGuestQuotaDefault, forKey: localGuestQuotaKey)
+        }
+        return defaults.integer(forKey: localGuestQuotaKey)
+    }
+
+    private func setLocalGuestRemaining(_ value: Int) {
+        UserDefaults.standard.set(max(0, value), forKey: localGuestQuotaKey)
     }
 
     /// Call this from the view whenever subscription state changes (e.g., `.onAppear` and `.onChange`).
@@ -70,17 +104,54 @@ final class ArticleAIViewModel: ObservableObject {
     
 
     /// Call this from the view whenever auth/quota changes.
+    /// IMPORTANT: `nil` means “unknown / do not overwrite”. This prevents views from
+    /// resetting an already-decremented local quota back to unknown on navigation.
     func updateQuota(guestRemaining: Int?, userRemaining: Int?, isSignedIn: Bool) {
-        self.quota = AIQuotaSnapshot(guestRemaining: guestRemaining, userRemaining: userRemaining, isSignedIn: isSignedIn)
+        let mergedGuest = guestRemaining ?? self.quota.guestRemaining
+        let mergedUser  = userRemaining  ?? self.quota.userRemaining
+
+        // Persist guest quota locally so it survives relaunch.
+        if isSignedIn == false, let r = mergedGuest {
+            setLocalGuestRemaining(r)
+        }
+
+        self.quota = AIQuotaSnapshot(guestRemaining: mergedGuest, userRemaining: mergedUser, isSignedIn: isSignedIn)
     }
 
     private func recomputeCTAIfPossible() {
         // Compute CTA from subscription + quota. Loading state is handled by the view via `.disabled(isLoading)`.
+        // IMPORTANT: when signed in, use the signed-in complimentary bucket; otherwise use the guest bucket.
+        let freeRemaining = quota.isSignedIn ? quota.userRemaining : quota.guestRemaining
+
         ctaState = AIInsightCTAState.resolve(
             entitlement: entitlement,
             isSignedIn: quota.isSignedIn,
-            guestFreeRemaining: quota.guestRemaining
+            guestFreeRemaining: freeRemaining
         )
+    }
+
+    private func decrementComplimentaryIfKnown() {
+        if quota.isSignedIn {
+            if let r = quota.userRemaining {
+                quota = AIQuotaSnapshot(
+                    guestRemaining: quota.guestRemaining,
+                    userRemaining: max(0, r - 1),
+                    isSignedIn: quota.isSignedIn
+                )
+            }
+        } else {
+            if let r = quota.guestRemaining {
+                let newRemaining = max(0, r - 1)
+                setLocalGuestRemaining(newRemaining)
+
+                quota = AIQuotaSnapshot(
+                    guestRemaining: newRemaining,
+                    userRemaining: quota.userRemaining,
+                    isSignedIn: quota.isSignedIn
+                )
+            }
+        }
+        // `quota` didSet will recompute CTA.
     }
 
     // MARK: - Derived UI Helpers
@@ -107,23 +178,18 @@ final class ArticleAIViewModel: ObservableObject {
     }
 
 // MARK: - Public API
-func refreshGuestQuota() async {
-    // Guest quota only applies when not signed in.
-    guard quota.isSignedIn == false else { return }
+    func refreshGuestQuota(force: Bool = false) async {
+        // Guest quota is purely local.
+        guard quota.isSignedIn == false else { return }
 
-    do {
-        let remaining = try await service.fetchQuota()
-        // Preserve the current signed-in flag (should be false here).
-        updateQuota(guestRemaining: remaining, userRemaining: nil, isSignedIn: quota.isSignedIn)
-    } catch {
-        #if DEBUG
-        print("fetchQuota failed:", (error as NSError).localizedDescription)
-        #endif
-        // Leave quota unchanged (nil/unknown) on failure.
+        if !force, quota.guestRemaining != nil { return }
+
+        let remaining = loadLocalGuestRemaining()
+        updateQuota(guestRemaining: remaining, userRemaining: nil, isSignedIn: false)
     }
-}
 
     func generate(for article: Article) async {
+        setActiveArticle(article.id)
         // Re-entrancy guard: ignore if already generating.
         guard !isLoading else { return }
 
@@ -146,6 +212,8 @@ func refreshGuestQuota() async {
                 guard !Task.isCancelled else { return }
 
                 self.state = .loaded(insight)
+                // Decrement complimentary quota locally so the UI and gating reflect usage immediately.
+                self.decrementComplimentaryIfKnown()
                 self.recomputeCTAIfPossible()
             } catch {
                 guard !Task.isCancelled else { return }
@@ -169,7 +237,8 @@ func refreshGuestQuota() async {
                     if payload.requiresSignIn == true {
                         // Guest free quota exhausted.
                         self.state = .idle
-                        // Force CTA to transition to sign-in by updating quota.
+                        // Persist and force CTA to transition to sign-in.
+                        self.setLocalGuestRemaining(0)
                         self.quota = AIQuotaSnapshot(
                             guestRemaining: 0,
                             userRemaining: self.quota.userRemaining,
