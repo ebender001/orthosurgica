@@ -1,0 +1,64 @@
+Specialty App Setup Instructions
+
+Use this project as a template for a new medical specialty by updating the items below.
+
+1. App title
+Set `CFBundleDisplayName` in `CardioThoraxia/CardioThoraxia/Info.plist`.
+
+Recommended values:
+- `CFBundleDisplayName`: the user-facing app name, for example `Neurology Topics`
+- `PUBMED_TOOL_NAME`: a compact tool identifier without spaces, for example `NeurologyTopics`
+
+2. Bundled MeSH catalog
+Replace `CardioThoraxia/CardioThoraxia/MeshCatalog.v1.json` with the specialty-specific catalog.
+
+Catalog format:
+- Top level: major heading
+- Second level: subspecialty
+- Third level: topic group
+- Value: array of topic entries
+
+Each topic entry must look like:
+{
+  "term": "Epilepsy",
+  "majorTopicDefault": true
+}
+
+If you want to keep multiple catalogs in the project:
+- Add another JSON file beside `MeshCatalog.v1.json`
+- Set `BUNDLED_MESH_CATALOG_NAME` in `CardioThoraxia/CardioThoraxia/Info.plist` to that filename without `.json`
+
+3. App icon
+Replace the contents of `CardioThoraxia/CardioThoraxia/Assets.xcassets/AppIcon.appiconset` with the icon set for the new specialty.
+
+4. Optional launch artwork
+The launch screen no longer depends on a logo image.
+If you want in-app branded artwork, update assets such as `CardioThoraxia/CardioThoraxia/images/logo.png` and any matching image sets you use in the UI.
+
+5. Notifications text
+The shipped notification copy is generic.
+Only change it if the new specialty app needs different wording.
+
+6. Remote catalog backend
+If the app connects to a remote catalog:
+- Confirm the Parse backend has an active `MeshCatalog` row
+- Confirm the JSON file attached to that row matches the same nested structure as the bundled catalog
+- Confirm `Secrets.xcconfig` points to the correct Parse server credentials
+
+7. PubMed configuration
+Review these keys in `CardioThoraxia/CardioThoraxia/Info.plist`:
+- `PUBMED_API_KEY`
+- `PUBMED_CONTACT_EMAIL`
+- `PUBMED_TOOL_NAME`
+
+8. Subscription and product naming
+This project still contains specialty-specific internal names such as `CardioThoraxia.storekit`.
+Those do not block reuse, but you should rename App Store products and related metadata before shipping a new app.
+
+9. Before shipping
+- Build the app in Xcode
+- Verify the app title displays correctly
+- Verify the icon appears correctly on device/simulator
+- Verify the bundled catalog loads on first launch with network disabled
+- Verify remote catalog updates still work with network enabled
+- Run a sample PubMed search from the new specialty topics

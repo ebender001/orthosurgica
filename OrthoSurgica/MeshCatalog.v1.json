@@ -1,0 +1,1538 @@
+{
+  "Adult Reconstruction": {
+    "Hip Arthroplasty": {
+      "General": [
+        {
+          "term": "Arthroplasty, Replacement, Hip",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hip Prosthesis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Total Hip Arthroplasty",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Revision Hip Arthroplasty",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Hip Osteoarthritis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Femoroacetabular Impingement",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteonecrosis of the Femoral Head",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Knee Arthroplasty": {
+      "General": [
+        {
+          "term": "Arthroplasty, Replacement, Knee",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Knee Prosthesis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Total Knee Arthroplasty",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Unicompartmental Knee Arthroplasty",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Patellofemoral Arthroplasty",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteoarthritis, Knee",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Revision Knee Arthroplasty",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Shoulder Arthroplasty": {
+      "General": [
+        {
+          "term": "Arthroplasty, Replacement, Shoulder",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Reverse Shoulder Arthroplasty",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Glenohumeral Arthritis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Shoulder Prosthesis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Revision, Failure & Complications": {
+      "General": [
+        {
+          "term": "Prosthesis Failure",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Prosthesis-Related Infections",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Periprosthetic Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Instability",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Wear and Osteolysis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Aseptic Loosening",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Medical Optimization": {
+      "General": [
+        {
+          "term": "Patient Selection",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Enhanced Recovery After Surgery",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Blood Management",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Venous Thromboembolism",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Opioid Stewardship",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Sports Medicine & Hip Preservation": {
+    "Knee Ligaments": {
+      "General": [
+        {
+          "term": "Anterior Cruciate Ligament Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Posterior Cruciate Ligament Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Medial Collateral Ligament Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Posterolateral Corner Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Knee Dislocation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Multiligament Knee Injury",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Meniscus & Cartilage": {
+      "General": [
+        {
+          "term": "Meniscal Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cartilage, Articular",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteochondritis Dissecans",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Chondral Lesions",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Microfracture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Meniscal Allograft Transplantation",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Patellofemoral": {
+      "General": [
+        {
+          "term": "Patellar Instability",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Patellofemoral Pain Syndrome",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Chondromalacia Patellae",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Tibial Tubercle Osteotomy",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Hip Preservation": {
+      "General": [
+        {
+          "term": "Femoroacetabular Impingement",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Acetabular Labrum",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Hip Arthroscopy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Borderline Hip Dysplasia",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Periacetabular Osteotomy",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Shoulder & Elbow Sports": {
+      "General": [
+        {
+          "term": "Rotator Cuff Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Shoulder Impingement Syndrome",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Shoulder Dislocation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "SLAP Lesions",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ulnar Collateral Ligament Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Valgus Extension Overload",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Tendon Injury in Athletes": {
+      "General": [
+        {
+          "term": "Patellar Tendinopathy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Hamstring Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Quadriceps Tendon Rupture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Achilles Tendon Injuries",
+          "majorTopicDefault": true
+        }
+      ]
+    }
+  },
+  "Shoulder & Elbow": {
+    "Rotator Cuff & Biceps": {
+      "General": [
+        {
+          "term": "Rotator Cuff Tears",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Rotator Cuff Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Biceps Tendon",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Calcific Tendinitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Adhesive Capsulitis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Instability": {
+      "General": [
+        {
+          "term": "Traumatic Anterior Shoulder Instability",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Shoulder Dislocation",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Glenoid Bone Loss",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Latarjet Procedure",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Acromioclavicular Joint Dislocation",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Arthritis & Arthroplasty": {
+      "General": [
+        {
+          "term": "Glenohumeral Arthritis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Acromioclavicular Joint",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Arthroplasty, Replacement, Shoulder",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Reverse Shoulder Arthroplasty",
+          "majorTopicDefault": true
+        }
+      ]
+    },
+    "Elbow Disorders": {
+      "General": [
+        {
+          "term": "Lateral Epicondylitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Medial Epicondylitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Distal Biceps Tendon Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Triceps Tendon Rupture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Elbow Dislocation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Elbow Stiffness",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Fractures": {
+      "General": [
+        {
+          "term": "Clavicle Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Scapula Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Proximal Humerus Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Humeral Shaft Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Distal Humerus Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Olecranon Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Fractures & Trauma": {
+    "Polytrauma & Open Injury": {
+      "General": [
+        {
+          "term": "Open Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Compartment Syndromes",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Damage Control Orthopedics",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Fracture Fixation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "External Fixators",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Nonunion",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Malunion",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Pelvis & Acetabulum": {
+      "General": [
+        {
+          "term": "Pelvic Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Pelvic Ring Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Acetabular Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Sacral Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Hip & Femur": {
+      "General": [
+        {
+          "term": "Hip Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Femoral Neck Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Intertrochanteric Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Subtrochanteric Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Femoral Shaft Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Distal Femur Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Knee, Tibia & Ankle": {
+      "General": [
+        {
+          "term": "Tibial Plateau Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Tibial Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Tibial Plafond Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ankle Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Calcaneal Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Talus Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Lisfranc Injuries",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Upper Extremity": {
+      "General": [
+        {
+          "term": "Radius Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ulna Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Distal Radius Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Scaphoid Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Metacarpal Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Phalangeal Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Periprosthetic Trauma": {
+      "General": [
+        {
+          "term": "Periprosthetic Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "THA Periprosthetic Fracture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Periprosthetic Distal Femur Fracture",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Spine": {
+    "Cervical Degenerative": {
+      "General": [
+        {
+          "term": "Cervical Myelopathy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cervical Radiculopathy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cervical Spondylosis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Lumbar Degenerative": {
+      "General": [
+        {
+          "term": "Lumbar Disc Herniation",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Lumbar Spinal Stenosis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Intervertebral Disc Degeneration",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Spondylolisthesis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Low Back Pain",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Deformity": {
+      "General": [
+        {
+          "term": "Scoliosis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Kyphosis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Adult Spinal Deformity",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Adolescent Idiopathic Scoliosis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Trauma": {
+      "General": [
+        {
+          "term": "Spinal Cord Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cervical Spine Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Thoracolumbar Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Odontoid Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Infection & Tumor": {
+      "General": [
+        {
+          "term": "Disk Space Infection",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Spinal Epidural Abscess",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Vertebral Osteomyelitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Spine Neoplasms",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Procedures": {
+      "General": [
+        {
+          "term": "Spinal Fusion",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Laminectomy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Diskectomy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Minimally Invasive Spine Surgery",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Hand & Wrist": {
+    "Nerve Compression": {
+      "General": [
+        {
+          "term": "Carpal Tunnel Syndrome",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cubital Tunnel Syndrome",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Ulnar Neuropathies",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Peripheral Nerve Injury & Repair",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Tendon Disorders": {
+      "General": [
+        {
+          "term": "Tenosynovitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Trigger Finger Disorder",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "De Quervain Disease",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Flexor Tendon Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Extensor Tendon Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Mallet Finger",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Boutonniere Deformity",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Fracture & Instability": {
+      "General": [
+        {
+          "term": "Scaphoid Fracture",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Distal Radius Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Scapholunate Ligament Injury",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Perilunate Dislocation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Triangular Fibrocartilage Complex",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Degenerative & Other": {
+      "General": [
+        {
+          "term": "Thumb Carpometacarpal Arthritis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Dupuytren Contracture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Kienbock Disease",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ganglion Cysts",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Foot & Ankle": {
+    "Forefoot": {
+      "General": [
+        {
+          "term": "Hallux Valgus",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hallux Rigidus",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Metatarsalgia",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Morton Neuroma",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Lesser Toe Deformity",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Hindfoot & Flatfoot": {
+      "General": [
+        {
+          "term": "Posterior Tibial Tendon Insufficiency",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Pes Planus",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Adult Acquired Flatfoot Deformity",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Cavovarus Foot",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Tarsal Coalition",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Tendon & Ligament": {
+      "General": [
+        {
+          "term": "Achilles Tendon Injuries",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Ankle Injuries",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ankle Sprain",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Chronic Lateral Ankle Instability",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Peroneal Tendon Disorders",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Syndesmotic Injury",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Plantar Fasciitis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Fractures": {
+      "General": [
+        {
+          "term": "Calcaneal Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Talus Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Pilon Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Lisfranc Injury",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Fifth Metatarsal Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Arthritis & Diabetic Foot": {
+      "General": [
+        {
+          "term": "Ankle Arthritis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Charcot Arthropathy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Diabetic Foot Ulcers",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteochondral Lesion of the Talus",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Pediatric Orthopedics": {
+    "Hip Disorders": {
+      "General": [
+        {
+          "term": "Developmental Dysplasia of the Hip",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hip Dislocation, Congenital",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Slipped Capital Femoral Epiphysis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Legg-Calve-Perthes Disease",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Blount Disease",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Leg Length Discrepancy",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Foot Deformity": {
+      "General": [
+        {
+          "term": "Clubfoot",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Flexible Flatfoot",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Congenital Vertical Talus",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Tarsal Coalition",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Pediatric Trauma": {
+      "General": [
+        {
+          "term": "Supracondylar Fracture - Pediatric",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Lateral Condyle Fracture - Pediatric",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Distal Radius Fractures - Pediatric",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Tibial Eminence Fracture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Physeal Fractures",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Pediatric Infection": {
+      "General": [
+        {
+          "term": "Osteomyelitis - Pediatric",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hip Septic Arthritis - Pediatric",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Septic Arthritis",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Neuromuscular & Syndromic": {
+      "General": [
+        {
+          "term": "Cerebral Palsy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteogenesis Imperfecta",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Duchenne Muscular Dystrophy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Charcot-Marie-Tooth Disease",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Myelodysplasia",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Orthopedic Oncology": {
+    "Primary Bone Tumors": {
+      "General": [
+        {
+          "term": "Osteosarcoma",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Chondrosarcoma",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Ewing Sarcoma",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Giant Cell Tumor",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteochondroma",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Soft Tissue Tumors": {
+      "General": [
+        {
+          "term": "Soft Tissue Sarcoma",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Synovial Sarcoma",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Liposarcoma",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Desmoid Tumor",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Metastatic Disease": {
+      "General": [
+        {
+          "term": "Bone Neoplasms",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Metastatic Disease of Extremity",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Pathologic Fractures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Impending Pathologic Fracture",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Infection": {
+    "Adult Bone & Joint": {
+      "General": [
+        {
+          "term": "Osteomyelitis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Arthritis, Infectious",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Septic Arthritis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Vertebral Osteomyelitis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Fracture-Related Infection",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Prosthetic Joint Infection": {
+      "General": [
+        {
+          "term": "Prosthesis-Related Infections",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Periprosthetic Joint Infection",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Debridement, Antibiotics, and Implant Retention",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Two-Stage Revision",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Pediatric Infection": {
+      "General": [
+        {
+          "term": "Osteomyelitis - Pediatric",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hip Septic Arthritis - Pediatric",
+          "majorTopicDefault": true
+        }
+      ]
+    }
+  },
+  "Bone Health & Metabolic": {
+    "Osteoporosis & Fragility": {
+      "General": [
+        {
+          "term": "Osteopenia & Osteoporosis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Osteoporosis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Fragility Fractures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Atypical Femur Fracture",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Metabolic Bone Disease": {
+      "General": [
+        {
+          "term": "Osteomalacia",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Hyperparathyroidism",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Vitamin D Deficiency",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Osteonecrosis & Insufficiency": {
+      "General": [
+        {
+          "term": "Osteonecrosis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Subchondral Insufficiency Fracture",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Limb Deformity & Lengthening": {
+    "Adult Deformity": {
+      "General": [
+        {
+          "term": "Adult Limb Deformity",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Osteotomy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Malunion",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Rotational Deformity",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Lengthening & Reconstruction": {
+      "General": [
+        {
+          "term": "Distraction Osteogenesis",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Limb Lengthening",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "External Fixators",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Transport",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Pediatric Alignment": {
+      "General": [
+        {
+          "term": "Angular Deformity",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Leg Length Discrepancy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Hemiepiphysiodesis",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Orthobiologics & Cartilage Restoration": {
+    "Cartilage Restoration": {
+      "General": [
+        {
+          "term": "Cartilage, Articular",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteochondral Allograft",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Autologous Chondrocyte Implantation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Microfracture",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Osteochondritis Dissecans",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Biologics": {
+      "General": [
+        {
+          "term": "Platelet-Rich Plasma",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Marrow Aspirate Concentrate",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Stem Cells",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Grafting",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Meniscus & Labrum Preservation": {
+      "General": [
+        {
+          "term": "Meniscal Repair",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Meniscal Allograft Transplantation",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Labral Repair",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Techniques": {
+    "Arthroscopy": {
+      "General": [
+        {
+          "term": "Arthroscopy",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Shoulder Arthroscopy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Hip Arthroscopy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Knee Arthroscopy",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ankle Arthroscopy",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Fixation": {
+      "General": [
+        {
+          "term": "Internal Fixators",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Plates",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Intramedullary Nails",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Fracture Fixation",
+          "majorTopicDefault": true
+        }
+      ]
+    },
+    "Minimally Invasive & Navigation": {
+      "General": [
+        {
+          "term": "Minimally Invasive Surgical Procedures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Computer-Assisted Surgery",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Surgical Navigation Systems",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Robotic Surgical Procedures",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Patient-Specific Instrumentation",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "Perioperative Care & Outcomes": {
+    "Perioperative Optimization": {
+      "General": [
+        {
+          "term": "Enhanced Recovery After Surgery",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Preoperative Care",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Postoperative Care",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Blood Management",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Opioid Stewardship",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Complications & Safety": {
+      "General": [
+        {
+          "term": "Venous Thromboembolism",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Surgical Site Infection",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Readmission",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Reoperation",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Outcomes Research": {
+      "General": [
+        {
+          "term": "Patient Reported Outcome Measures",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Return to Sport",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Return to Work",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Cost-Effectiveness",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Shared Decision Making",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  },
+  "General Orthopaedics & Methods": {
+    "Evidence & Statistics": {
+      "General": [
+        {
+          "term": "Level of Evidence",
+          "majorTopicDefault": true
+        },
+        {
+          "term": "Clinical Trial Design",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Statistic Definitions",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Meta-Analysis",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Systematic Review",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Basic Science": {
+      "General": [
+        {
+          "term": "Biomechanics",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Healing",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Bone Remodeling",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Wear & Osteolysis Basic Science",
+          "majorTopicDefault": false
+        }
+      ]
+    },
+    "Practice Management": {
+      "General": [
+        {
+          "term": "Legal Considerations in Orthopaedic Practice",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Ethics in Orthopaedic Practice",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Fluoroscopy & Radiation Safety",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Telemedicine",
+          "majorTopicDefault": false
+        },
+        {
+          "term": "Burnout in Orthopaedics",
+          "majorTopicDefault": false
+        }
+      ]
+    }
+  }
+}
